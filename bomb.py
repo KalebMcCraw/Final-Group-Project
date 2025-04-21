@@ -1,7 +1,7 @@
 #################################
 # CSC 102 Defuse the Bomb Project
 # Main program
-# Team: 
+# Team: Lama A., Janpolad G., Kaleb M., Teya S.
 #################################
 
 # import the configs
@@ -43,15 +43,15 @@ def setup_phases():
     # bind the 7-segment display to the LCD GUI so that it can be paused/unpaused from the GUI
     gui.setTimer(timer)
     # setup the keypad thread
-    keypad = Keypad(component_keypad, keypad_target)
+    keypad = Keypad(component_keypad, keypadAnswers)
     # setup the jumper wires thread
-    wires = Wires(component_wires, wires_target)
+    wires = Wires(component_wires, wiresTarget)
     # setup the pushbutton thread
     button = Button(component_button_state, component_button_RGB, button_target, button_color, timer)
     # bind the pushbutton to the LCD GUI so that its LED can be turned off when we quit
     gui.setButton(button)
     # setup the toggle switches thread
-    toggles = Toggles(component_toggles, toggles_target)
+    toggles = Toggles(component_toggles, togglesTarget)
 
     # start the phase threads
     timer.start()

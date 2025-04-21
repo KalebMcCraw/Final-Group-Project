@@ -1,20 +1,20 @@
 #################################
 # CSC 102 Defuse the Bomb Project
 # Configuration file
-# Team: 
+# Team: Lama A., Janpolad G., Kaleb M., Teya S.
 #################################
 
 # constants
 DEBUG = False        # debug mode?
-RPi = True           # is this running on the RPi?
-ANIMATE = True       # animate the LCD text?
-SHOW_BUTTONS = False # show the Pause and Quit buttons on the main LCD GUI?
+RPi = False           # is this running on the RPi?
+ANIMATE = False       # animate the LCD text?
+SHOW_BUTTONS = True # show the Pause and Quit buttons on the main LCD GUI?
 COUNTDOWN = 300      # the initial bomb countdown value (seconds)
 NUM_STRIKES = 5      # the total strikes allowed before the bomb "explodes"
 NUM_PHASES = 4       # the total number of initial active bomb phases
 
 # imports
-from random import randint, shuffle, choice
+from random import randint, shuffle, choice, sample
 from string import ascii_uppercase
 if (RPi):
     import board
@@ -87,136 +87,114 @@ if (RPi):
 ###########
 # functions
 ###########
-# generates the bomb's serial number
-#  it should be made up of alphaneumeric characters, and include at least 3 digits and 3 letters
-#  the sum of the digits should be in the range 1..15 to set the toggles target
-#  the first three letters should be distinct and in the range 0..4 such that A=0, B=1, etc, to match the jumper wires
-#  the last letter should be outside of the range
-def genSerial():
-    # set the digits (used in the toggle switches phase)
-    serial_digits = []
-    toggle_value = randint(1, 15)
-    # the sum of the digits is the toggle value
-    while (len(serial_digits) < 3 or toggle_value - sum(serial_digits) > 0):
-        d = randint(0, min(9, toggle_value - sum(serial_digits)))
-        serial_digits.append(d)
+'''
+Generate keypad; return a random written-response question.
+'''
+def gen_keypad():
+    # format: question, answers, hint, difficulty, image
+    return choice([('Who is this?', ['75268', '4367975268', '43679275268'], 'The oldest building at the University of Tampa is named after this individual.', None, '<https://www.plantmuseum.com/getattachment/About/Henry-B-Plant-Bio/1994-3-48-Henry-Plant-4x6.jpg.aspx>'),
+                 ('Who is this?', ['32452374', '83737232452374', '8373722246233732452374', '77374336832452374'], 'This individual is in charge of the University of Tampa.', None, '<https://www.ut.edu/content/dam/ut/uploadedImages/_Site_Root/_UT_Life/2023/TeresaDahlberg_954x537.jpg>'),
+                 ('Which building headquarters for the Campus Safety team?', ['3259', '466682846628453464', '4666828466263265522672846628453464', '265522672846628453464'], 'The building is at the intersection of N Boulevard and W North A Street.', None, None),
+                 ('Which building headquarters for the Bursar’s office?', ['75268'], 'The building is the most famous one on the University of Tampa’s campus.', None, None),
+                 ('Name a restaurant in the Vaughn Center.', ['85846283346464', '244253452', '3467834627684377', '37374273284667', '84347455', '8438847455', '8847455', '22338379', '52428262'], 'One of these places is one of the most popular fast food chains in the United States.', None, None),
+                 ('Name one of the University of Tampa’s four colleges.', ['26553436327872635388377', '27872635388377', '7953726553436328746377', '26553436328746377', '28746377', '265534363628872543258472436237', '628872543258472436237', '2655343637624257243623762843628427263338228466', '7624257243623762843628427263338228466'], 'One of these colleges revolves around the study of corporate practice.', None, None),
+                 ('What is the University of Tampa’s mascot’s name?', ['772782287'], 'He is Spartan.', None, None),
+                 ('What was Plant Hall originally called?', ['8267222946835', '8246835', '8438267222946835', '8438246835'], 'The building operated as a hotel.', None, None),
+                 ('Name a sport played at the University of Tampa.', ['22732255', '2275382255', '276772686879', '4653', '52276773', '762237', '79466464', '87225', '232248655392255', '769464', '76382255', '836647', '8655392255', '243375323464', '32623', '5822732255', '5852276773'], 'One of these sports is running-based.', None, None),
+                 ('Name a previous president of the University of Tampa.', ['828446', '766253828446', '7662535828446', '783337', '32843783337', '328434783337', '726766', '27823726766', '278232726766', '24374473', '742427324374473', '7424273324374473', '69367', '2369367', '3356', '328433356', '3284363356', '62623', '355966362623', '3559663262623', '666639', '52637666639', '526373666639', '526373554688666639', '7437626', '56467437626', '564647437626', '56464278397437626', '772853464', '37333742772853464', '373337424772853464'], 'The oldest of these individuals had a road on the University of Tampa’s campus named after them', None, None)])
 
-    # set the letters (used in the jumper wires phase)
-    jumper_indexes = [ 0 ] * 5
-    while (sum(jumper_indexes) < 3):
-        jumper_indexes[randint(0, len(jumper_indexes) - 1)] = 1
-    jumper_value = int("".join([ str(n) for n in jumper_indexes ]), 2)
-    # the letters indicate which jumper wires must be "cut"
-    jumper_letters = [ chr(i + 65) for i, n in enumerate(jumper_indexes) if n == 1 ]
-
-    # form the serial number
-    serial = [ str(d) for d in serial_digits ] + jumper_letters
-    # and shuffle it
-    shuffle(serial)
-    # finally, add a final letter (F..Z)
-    serial += [ choice([ chr(n) for n in range(70, 91) ]) ]
-    # and make the serial number a string
-    serial = "".join(serial)
-
-    return serial, toggle_value, jumper_value
-
-# generates the keypad combination from a keyword and rotation key
-def genKeypadCombination():
-    # encrypts a keyword using a rotation cipher
-    def encrypt(keyword, rot):
-        cipher = ""
-
-        # encrypt each letter of the keyword using rot
-        for c in keyword:
-            cipher += chr((ord(c) - 65 + rot) % 26 + 65)
-
-        return cipher
-
-    # returns the keypad digits that correspond to the passphrase
-    def digits(passphrase):
-        combination = ""
-        keys = [ None, None, "ABC", "DEF", "GHI", "JKL", "MNO", "PRS", "TUV", "WXY" ]
-
-        # process each character of the keyword
-        for c in passphrase:
-            for i, k in enumerate(keys):
-                if (k and c in k):
-                    # map each character to its digit equivalent
-                    combination += str(i)
-
-        return combination
-
-    # the list of keywords and matching passphrases
-    keywords = { "BANDIT": "RIVER",\
-                 "BUCKLE": "FADED",\
-                 "CANOPY": "FOXES",\
-                 "DEBATE": "THROW",\
-                 "FIERCE": "TRICK",\
-                 "GIFTED": "CYCLE",\
-                 "IMPACT": "STOLE",\
-                 "LONELY": "TOADY",\
-                 "MIGHTY": "ALOOF",\
-                 "NATURE": "CARVE",\
-                 "REBORN": "CLIMB",\
-                 "RECALL": "FEIGN",\
-                 "SYSTEM": "LEAVE",\
-                 "TAKING": "SPINY",\
-                 "WIDELY": "BOUND",\
-                 "ZAGGED": "YACHT" }
-    # the rotation cipher key
-    rot = randint(1, 25)
-
-    # pick a keyword and matching passphrase
-    keyword, passphrase = choice(list(keywords.items()))
-    # encrypt the passphrase and get its combination
-    cipher_keyword = encrypt(keyword, rot)
-    combination = digits(passphrase)
-
-    return keyword, cipher_keyword, rot, combination, passphrase
-
+'''
+Generate toggles; return a random question with a numeric answer between 1 & 15.
+'''
+def gen_toggles():
+    # format: question, answer, hint, difficulty, image
+    return choice([('How many rivers does the University of Tampa border?', '0001', '', None, None),
+                 ('How many baseball fields are there on campus?', '0010', '', None, None),
+                 ('How many years are there between Tampa’s incorporation as a city and the opening of the Tampa Bay Hotel?', '0011', '', None, None),
+                 ('How many colleges does the University of Tampa have?', '0100', '', None, None),
+                 ('When did the City of Tampa purchase Tampa Bay Hotel (now Plant Hall)?', '0101', '', None, None),
+                 ('How many minarets does Plant Hall have?', '0110', '', None, None),
+                 ('What time does Ultimate Dining open on weekdays?', '0111', '', None, None),
+                 ('When did the Cass Building open?', '1000', '', None, None),
+                 ('What time does the Benson and Alex Fitness Center open on Saturday?', '1001', '', None, None),
+                 ('How many stories tall is the Grand Center?', '1010', '', None, None),
+                 ('University of Tampa president Teresa Abi-Nader Dahlberg is the ___th president of the university.', '1011', '', None, None),
+                 ('How many residence halls are at the University of Tampa?', '1100', '', None, None),
+                 ('How many sororities are there in the University of Tampa?', '1101', '', None, None),
+                 ('What rank does U.S. News & World Report give the University of Tampa in the Regional Universities South category? (2025 Rankings)', '1110', '', None, None),
+                 ('What are the final two digits of the LASER Team’s phone number?', '1111', '', None, None)])
+'''
+Generate wires; return 5 random True/False statements.
+'''
+def gen_wires():
+    # format: statement, value, difficulty
+    return sample([['There is a McDonalds on the University of Tampa’s campus.', False, None],
+                   ['The University of Tampa is the largest university in Tampa.', False, None],
+                   ['The University of Tampa has fraternities and sororities.', True, None],
+                   ['You can rent media recording equipment from the Cass Communications Building.', True, None],
+                   ['The University of Tampa has a safety team that works 24/7.', True, None],
+                   ['The tallest building at the University of Tampa is the Ferman Center for the Arts.', False, None],
+                   ['The University of Tampa opened before any development of Harbour Island, Tampa.', True, None],
+                   ['The newest building at the University of Tampa is the Jenkins Tech Building.', False, None],
+                   ['There are over 1,000 faculty members at the University of Tampa.', False, None],
+                   ['The University of Tampa has an electrical engineering program.', False, None],
+                   ['The University of Tampa’s official colors are red, black, and orange.', False, None],
+                   ['The University of Tampa was founded in 1931.', True, None],
+                   ['There are over 200 majors offered by the University of Tampa.', False, None],
+                   ['The University of Tampa competes in NCAA Division II sports.', True, None],
+                   ['There have been 11 presidents of the University of Tampa.', True, None],
+                   ['In our context, UT stands for the University of Texas.', False, None],
+                   ['Plant Hall is designated as a national historic landmark.', True, None],
+                   ['The University of Tampa has hundreds of student clubs.', True, None],
+                   ['The University of Tampa offers rentable e-scooters to students and faculty.', False, None],
+                   ['You can see downtown Tampa from campus.', True, None],
+                   ['The University of Tampa is always running, even during extreme weather events such as hurricanes.', False, None],
+                   ['The University of Tampa has a special alert messaging service for emergency use.', True, None],
+                   ['The current mayor of Tampa, Jane Castor, is a University of Tampa alumni.', True, None],
+                   ['Elvis Presley performed in the Sykes Chapel.', False, None],
+                   ['The University of Tampa is situated directly on the shore of Tampa Bay.', False, None]], 5)
 ###############################
 # generate the bomb's specifics
 ###############################
-# generate the bomb's serial number (which also gets us the toggle and jumper target values)
-#  serial: the bomb's serial number
-#  toggles_target: the toggles phase defuse value
-#  wires_target: the wires phase defuse value
-serial, toggles_target, wires_target = genSerial()
+# # generate the bomb's serial number (which also gets us the toggle and jumper target values)
+# #  serial: the bomb's serial number
+# #  toggles_target: the toggles phase defuse value
+# #  wires_target: the wires phase defuse value
+# serial, toggles_target, wires_target = genSerial()
+# 
+# # generate the combination for the keypad phase
+# #  keyword: the plaintext keyword for the lookup table
+# #  cipher_keyword: the encrypted keyword for the lookup table
+# #  rot: the key to decrypt the keyword
+# #  keypad_target: the keypad phase defuse value (combination)
+# #  passphrase: the target plaintext passphrase
+# keyword, cipher_keyword, rot, keypad_target, passphrase = genKeypadCombination()
+# 
+# # generate the color of the pushbutton (which determines how to defuse the phase)
+# button_color = choice(["R", "G", "B"])
+# # appropriately set the target (R is None)
+# button_target = None
+# # G is the first numeric digit in the serial number
+# if (button_color == "G"):
+#     button_target = [ n for n in serial if n.isdigit() ][0]
+# # B is the last numeric digit in the serial number
+# elif (button_color == "B"):
+#     button_target = [ n for n in serial if n.isdigit() ][-1]
 
-# generate the combination for the keypad phase
-#  keyword: the plaintext keyword for the lookup table
-#  cipher_keyword: the encrypted keyword for the lookup table
-#  rot: the key to decrypt the keyword
-#  keypad_target: the keypad phase defuse value (combination)
-#  passphrase: the target plaintext passphrase
-keyword, cipher_keyword, rot, keypad_target, passphrase = genKeypadCombination()
-
-# generate the color of the pushbutton (which determines how to defuse the phase)
-button_color = choice(["R", "G", "B"])
-# appropriately set the target (R is None)
-button_target = None
-# G is the first numeric digit in the serial number
-if (button_color == "G"):
-    button_target = [ n for n in serial if n.isdigit() ][0]
-# B is the last numeric digit in the serial number
-elif (button_color == "B"):
-    button_target = [ n for n in serial if n.isdigit() ][-1]
+'''
+These variables are used to put information from the trivia lists into the components, gui, etc.
+'''
+keypadQuestion, keypadAnswers, keypadHint, keypadDiff, keypadImg = gen_keypad()
+togglesQuestion, togglesTarget, togglesHint, togglesDiff, togglesImg = gen_toggles()
+wiresQ1, wiresQ2, wiresQ3, wiresQ4, wiresQ5 = gen_wires()
+wiresTarget = ''.join([str(int(wiresQ1[1])), str(int(wiresQ2[1])), str(int(wiresQ3[1])), str(int(wiresQ4[1])), str(int(wiresQ5[1]))])
 
 if (DEBUG):
-    print(f"Serial number: {serial}")
-    print(f"Toggles target: {bin(toggles_target)[2:].zfill(4)}/{toggles_target}")
-    print(f"Wires target: {bin(wires_target)[2:].zfill(5)}/{wires_target}")
-    print(f"Keypad target: {keypad_target}/{passphrase}/{keyword}/{cipher_keyword}(rot={rot})")
-    print(f"Button target: {button_target}")
+    print(f"Keypad Question: {keypadQuestion}")
+    print(f"Toggles Question: {togglesQuestion}")
+    print(f"Wires Statements: \n\t{wiresQ1[0]}\n\t{wiresQ2[0]}\n\t{wiresQ3[0]}\n\t{wiresQ4[0]}\n\t{wiresQ5[0]}")
 
 # set the bomb's LCD bootup text
-boot_text = f"Booting...\n\x00\x00"\
-            f"*Kernel v3.1.4-159 loaded.\n"\
-            f"Initializing subsystems...\n\x00"\
-            f"*System model: 102BOMBv4.2\n"\
-            f"*Serial number: {serial}\n"\
-            f"Encrypting keypad...\n\x00"\
-            f"*Keyword: {cipher_keyword}; key: {rot}\n"\
-            f"*{' '.join(ascii_uppercase)}\n"\
-            f"*{' '.join([str(n % 10) for n in range(26)])}\n"\
-            f"Rendering phases...\x00"
+boot_text = f"Keypad Question: \x00{keypadQuestion}\x00\n"\
+            f"Toggles Question: \x00{togglesQuestion}\x00\n"\
+            f"Wires Statements: \x00\n\t{wiresQ1[0]}\n\t{wiresQ2[0]}\n\t{wiresQ3[0]}\n\t{wiresQ4[0]}\n\t{wiresQ5[0]}\x00\n"
