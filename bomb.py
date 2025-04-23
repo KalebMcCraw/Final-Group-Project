@@ -46,10 +46,10 @@ def setup_phases():
     keypad = Keypad(component_keypad, keypadAnswers)
     # setup the jumper wires thread
     wires = Wires(component_wires, wiresTarget)
-    # setup the pushbutton thread
-    button = Button(component_button_state, component_button_RGB, button_target, button_color, timer)
-    # bind the pushbutton to the LCD GUI so that its LED can be turned off when we quit
-    gui.setButton(button)
+#     # setup the pushbutton thread
+#     button = Button(component_button_state, component_button_RGB, button_target, button_color, timer)
+#     # bind the pushbutton to the LCD GUI so that its LED can be turned off when we quit
+#     gui.setButton(button)
     # setup the toggle switches thread
     toggles = Toggles(component_toggles, togglesTarget)
 
@@ -57,7 +57,7 @@ def setup_phases():
     timer.start()
     keypad.start()
     wires.start()
-    button.start()
+#     button.start()
     toggles.start()
 
 # checks the phase threads
@@ -102,19 +102,19 @@ def check_phases():
             strike()
             # reset the wires
             wires._failed = False
-    # check the button
-    if (button._running):
-        # update the GUI
-        gui._lbutton["text"] = f"Button: {button}"
-        # the phase is defused -> stop the thread
-        if (button._defused):
-            button._running = False
-            active_phases -= 1
-        # the phase has failed -> strike
-        elif (button._failed):
-            strike()
-            # reset the button
-            button._failed = False
+#     # check the button
+#     if (button._running):
+#         # update the GUI
+#         gui._lbutton["text"] = f"Button: {button}"
+#         # the phase is defused -> stop the thread
+#         if (button._defused):
+#             button._running = False
+#             active_phases -= 1
+#         # the phase has failed -> strike
+#         elif (button._failed):
+#             strike()
+#             # reset the button
+#             button._failed = False
     # check the toggles
     if (toggles._running):
         # update the GUI
@@ -163,15 +163,15 @@ def turn_off():
     timer._running = False
     keypad._running = False
     wires._running = False
-    button._running = False
+#     button._running = False
     toggles._running = False
 
     # turn off the 7-segment display
     component_7seg.blink_rate = 0
     component_7seg.fill(0)
-    # turn off the pushbutton's LED
-    for pin in button._rgb:
-        pin.value = True
+#     # turn off the pushbutton's LED
+#     for pin in button._rgb:
+#         pin.value = True
 
 ######
 # MAIN
