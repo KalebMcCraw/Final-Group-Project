@@ -92,37 +92,37 @@ Generate keypad; return a random written-response question.
 '''
 def gen_keypad():
     # format: question, answers, hint, difficulty, image
-    return choice([('Who is this?', ['75268', '4367975268', '43679275268'], 'The oldest building at the University of Tampa is named after this individual.', None, '<https://www.plantmuseum.com/getattachment/About/Henry-B-Plant-Bio/1994-3-48-Henry-Plant-4x6.jpg.aspx>'),
-                 ('Who is this?', ['32452374', '83737232452374', '8373722246233732452374', '77374336832452374'], 'This individual is in charge of the University of Tampa.', None, '<https://www.ut.edu/content/dam/ut/uploadedImages/_Site_Root/_UT_Life/2023/TeresaDahlberg_954x537.jpg>'),
-                 ('Which building headquarters for the Campus Safety team?', ['3259', '466682846628453464', '4666828466263265522672846628453464', '265522672846628453464'], 'The building is at the intersection of N Boulevard and W North A Street.', None, None),
-                 ('Which building headquarters for the Bursar’s office?', ['75268'], 'The building is the most famous one on the University of Tampa’s campus.', None, None),
-                 ('Name a restaurant in the Vaughn Center.', ['85846283346464', '244253452', '3467834627684377', '37374273284667', '84347455', '8438847455', '8847455', '22338379', '52428262'], 'One of these places is one of the most popular fast food chains in the United States.', None, None),
-                 ('Name one of the University of Tampa’s four colleges.', ['26553436327872635388377', '27872635388377', '7953726553436328746377', '26553436328746377', '28746377', '265534363628872543258472436237', '628872543258472436237', '2655343637624257243623762843628427263338228466', '7624257243623762843628427263338228466'], 'One of these colleges revolves around the study of corporate practice.', None, None),
-                 ('What is the University of Tampa’s mascot’s name?', ['772782287'], 'He is Spartan.', None, None),
-                 ('What was Plant Hall originally called?', ['8267222946835', '8246835', '8438267222946835', '8438246835'], 'The building operated as a hotel.', None, None),
-                 ('Name a sport played at the University of Tampa.', ['22732255', '2275382255', '276772686879', '4653', '52276773', '762237', '79466464', '87225', '232248655392255', '769464', '76382255', '836647', '8655392255', '243375323464', '32623', '5822732255', '5852276773'], 'One of these sports is running-based.', None, None),
-                 ('Name a previous president of the University of Tampa.', ['828446', '766253828446', '7662535828446', '783337', '32843783337', '328434783337', '726766', '27823726766', '278232726766', '24374473', '742427324374473', '7424273324374473', '69367', '2369367', '3356', '328433356', '3284363356', '62623', '355966362623', '3559663262623', '666639', '52637666639', '526373666639', '526373554688666639', '7437626', '56467437626', '564647437626', '56464278397437626', '772853464', '37333742772853464', '373337424772853464'], 'The oldest of these individuals had a road on the University of Tampa’s campus named after them', None, None)])
+    return choice([('Who is this?', ['75268', '4367975268', '43679275268'], 'The oldest building at the University of Tampa is named after this individual.', None, 'whoisthis1.jpg'),
+                 ('Who is this?', ['32452374', '83737232452374', '8373722246233732452374', '77374336832452374'], 'This individual is in charge of the University of Tampa.', None, 'whoisthis2.jpg>'),
+                 ('Which building headquarters for the Campus Safety team?', ['3259', '466682846628453464', '4666828466263265522672846628453464', '265522672846628453464'], 'The building is at the intersection of N Boulevard and W North A Street.', None, 'csafety.jpg'),
+                 ('Which building headquarters for the Bursar’s office?', ['75268'], 'The building is the most famous one on the University of Tampa’s campus.', None, 'bursar.jpg'),
+                 ('Name a restaurant in the Vaughn Center.', ['85846283346464', '244253452', '3467834627684377', '37374273284667', '84347455', '8438847455', '8847455', '22338379', '52428262'], 'One of these places is one of the most popular fast food chains in the United States.', None, 'vaughn.jpg'),
+                 ('Name one of the University of Tampa’s four colleges.', ['26553436327872635388377', '27872635388377', '7953726553436328746377', '26553436328746377', '28746377', '265534363628872543258472436237', '628872543258472436237', '2655343637624257243623762843628427263338228466', '7624257243623762843628427263338228466'], None, 'One of these colleges revolves around the study of corporate practice.', 'acollege.jpg'),
+                 ('What is the University of Tampa’s mascot’s name?', ['772782287'], 'He is Spartan.', None, 'mascot.jpg'),
+                 ('What was Plant Hall originally called?', ['8267222946835', '8246835', '8438267222946835', '8438246835'], 'The building operated as a hotel.', None, 'phall1.jpg'),
+                 ('Name a sport played at the University of Tampa.', ['22732255', '2275382255', '276772686879', '4653', '52276773', '762237', '79466464', '87225', '232248655392255', '769464', '76382255', '836647', '8655392255', '243375323464', '32623', '5822732255', '5852276773'], 'One of these sports is running-based.', None, 'sports.jpg'),
+                 ('Name a previous president of the University of Tampa.', ['828446', '766253828446', '7662535828446', '783337', '32843783337', '328434783337', '726766', '27823726766', '278232726766', '24374473', '742427324374473', '7424273324374473', '69367', '2369367', '3356', '328433356', '3284363356', '62623', '355966362623', '3559663262623', '666639', '52637666639', '526373666639', '526373554688666639', '7437626', '56467437626', '564647437626', '56464278397437626', '772853464', '37333742772853464', '373337424772853464'], 'The oldest of these individuals had a road on the University of Tampa’s campus named after them', None, 'president.jpg')])
 
 '''
 Generate toggles; return a random question with a numeric answer between 1 & 15.
 '''
 def gen_toggles():
     # format: question, answer, hint, difficulty, image
-    return choice([('How many rivers does the University of Tampa border?', '0001', '', None, None),
-                 ('How many baseball fields are there on campus?', '0010', '', None, None),
-                 ('How many years are there between Tampa’s incorporation as a city and the opening of the Tampa Bay Hotel?', '0011', '', None, None),
-                 ('How many colleges does the University of Tampa have?', '0100', '', None, None),
-                 ('When did the City of Tampa purchase Tampa Bay Hotel (now Plant Hall)?', '0101', '', None, None),
-                 ('How many minarets does Plant Hall have?', '0110', '', None, None),
-                 ('What time does Ultimate Dining open on weekdays?', '0111', '', None, None),
-                 ('When did the Cass Building open?', '1000', '', None, None),
-                 ('What time does the Benson and Alex Fitness Center open on Saturday?', '1001', '', None, None),
-                 ('How many stories tall is the Grand Center?', '1010', '', None, None),
-                 ('University of Tampa president Teresa Abi-Nader Dahlberg is the ___th president of the university.', '1011', '', None, None),
-                 ('How many residence halls are at the University of Tampa?', '1100', '', None, None),
-                 ('How many sororities are there in the University of Tampa?', '1101', '', None, None),
-                 ('What rank does U.S. News & World Report give the University of Tampa in the Regional Universities South category? (2025 Rankings)', '1110', '', None, None),
-                 ('What are the final two digits of the LASER Team’s phone number?', '1111', '', None, None)])
+    return choice([('How many rivers does the University of Tampa border?', '0001', 'Like someone who doesn\'t have a spouse.', None, 'utmap.jpg'),
+                 ('How many baseball fields are there on campus?', '0010', 'Equitable to a hand-based peace symbol.', None, 'baseball.jpg'),
+                 ('How many years are there between Tampa’s incorporation as a city and the opening of the Tampa Bay Hotel?', '0011', 'The _____ Musketeers.', None, 'oldmap.jpg'),
+                 ('How many colleges does the University of Tampa have?', '0100', 'The university uses the "____-College Model".', None, 'colleges.jpg'),
+                 ('When did the City of Tampa purchase Tampa Bay Hotel (now Plant Hall)?', '0101', 'The same year the Russo-Japanese war concluded.', None, 'historic.jpg'),
+                 ('How many minarets does Plant Hall have?', '0110', 'The number is afraid of seven.', None, 'minaret.jpg'),
+                 ('What time does Ultimate Dining open on weekdays?', '0111', 'Many people\'s lucky number.', None, 'udining.jpg'),
+                 ('When did the Cass Building open?', '1000', 'A same year a unique president was elected.', None, 'cass.jpg'),
+                 ('What time does the Benson and Alex Fitness Center open on Saturday?', '1001', 'What lives people claim cats have.', None, 'fitness.jpg'),
+                 ('How many stories tall is the Grand Center?', '1010', 'A big fat hen!', None, 'gc.jpg'),
+                 ('University of Tampa president Teresa Abi-Nader Dahlberg is the ___th president of the university.', '1011', 'Each president has, on average, served for around 8-9 years.', None, 'dahlberg.jpg'),
+                 ('How many residence halls are at the University of Tampa?', '1100', 'A dime...', None, 'residence.jpg'),
+                 ('How many sororities are there in the University of Tampa?', '1101', 'A spooky Friday.', None, 'sorority.jpg'),
+                 ('What rank does U.S. News & World Report give the University of Tampa in the Regional Universities South category? (2025 Rankings)', '1110', 'The same as the youngest age one can drive in the U.S.', None, 'tampa.jpg'),
+                 ('What are the final two digits of the LASER Team’s phone number?', '1111', 'The same number as the iPhone model that released in 2023.', None, 'laser.jpg')])
 '''
 Generate wires; return 5 random True/False statements.
 '''
