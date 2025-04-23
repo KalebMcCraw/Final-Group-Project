@@ -117,9 +117,9 @@ class Lcd(Frame):
             self._timer._running = False
             self._timer._component.blink_rate = 0
             self._timer._component.fill(0)
-            # turn off the pushbutton's LED
-            for pin in self._button._rgb:
-                pin.value = True
+#             # turn off the pushbutton's LED
+#             for pin in self._button._rgb:
+#                 pin.value = True
         # exit the application
         exit(0)
 
@@ -189,8 +189,8 @@ class Timer(PhaseThread):
 
 # the keypad phase
 class Keypad(PhaseThread):
-    def __init__(self, component, targets, name="Keypad"):
-        super().__init__(name, component, targets)
+    def __init__(self, component, target, name="Keypad"):
+        super().__init__(name, component, target)
         # the default value is an empty string
         self._value = ""
 
@@ -211,13 +211,13 @@ class Keypad(PhaseThread):
                 # log the key
                 self._value += str(key)
                 # the combination is correct -> phase defused
-                if (self._value in self._targets):
+                if (self._value in self._target):
                     self._defused = True
                 # if the combination doesn't match any target, fail
                 else:
                     self._failed = True
-                    for target in self._targets:
-                        if (self._value == target[0:len(self._value)]):
+                    for tar in self._target:
+                        if (self._value == tar[0:len(self._value)]):
                             self._failed = False
             sleep(0.1)
 
@@ -235,13 +235,19 @@ class Wires(PhaseThread):
 
     # runs the thread
     def run(self):
-        self._value = ''.join([str(int(pin.value)) for pin in self._pins])
-        # fail if the value isn't the target and it was changed
-        if (self._value != self._target) and (self._value != '00000'):
-            self._failed = True
-        # defuse if it matches target
-        elif self._value == self._target:
-            self._defused = True
+        self._running = True
+        self._temp =  None
+        while (self._running):
+            self._value = ''.join([str(int(pin.value)) for pin in self._component])
+            # check each wire
+            for i in range (5):
+                # if the wire is diconnected and shouldnt have been, fail
+                if (self._value[i] == '0') and (self._target[i] == '1') and not (self._value == self._temp):
+                    self._failed = True
+                    self._temp = self._value
+                # if the wires are all done, defuse
+                elif self._value == self._target:
+                    self._defused = True
 
     # returns the jumper wires state as a string
     def __str__(self):
@@ -308,13 +314,19 @@ class Toggles(PhaseThread):
 
     # runs the thread
     def run(self):
-        self._value = ''.join([str(int(pin.value)) for pin in self._pins])
-        # fail if the value isn't the target and it was changed
-        if (self._value != self._target) and (self._value != '00000'):
-            self._failed = True
-        # defuse if it matches target
-        elif self._value == self._target:
-            self._defused = True
+        self._running = True
+        self._temp = None
+        while (self._running):
+            self._value = ''.join([str(int(pin.value)) for pin in self._component])
+            # check each toggle
+            for i in range (4):
+                # if a toggle was switched when it shouldnt have been, fail
+                if (self._value[i] == '1') and (self._target[i] == '0') and not (self._value == self._temp):
+                    self._failed = True
+                    self._temp = self._value
+                # if the toggles are correct, defuse
+                elif self._value == self._target:
+                    self._defused = True
 
     # returns the toggle switches state as a string
     def __str__(self):
