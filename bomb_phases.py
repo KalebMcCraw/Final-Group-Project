@@ -1,7 +1,7 @@
 #################################
 # CSC 102 Defuse the Bomb Project
 # GUI and Phase class definitions
-# Team: 
+# Team: Lama A., Janpolad G., Kaleb M., Teya S.
 #################################
 
 # import the configs
@@ -14,6 +14,7 @@ from time import sleep
 import os
 import sys
 from random import randint,choice
+
 #########
 # classes
 #########
@@ -211,11 +212,14 @@ class Keypad(PhaseThread):
                 # log the key
                 self._value += str(key)
                 # the combination is correct -> phase defused
-                if (self._value == self._target):
+                if (self._value in self._target):
                     self._defused = True
-                # the combination is incorrect -> phase failed (strike)
-                elif (self._value != self._target[0:len(self._value)]):
+                # if the combination doesn't match any target, fail
+                else:
                     self._failed = True
+                    for tar in self._target:
+                        if (self._value == tar[0:len(self._value)]):
+                            self._failed = False
             sleep(0.1)
 
     # returns the keypad combination as a string
@@ -232,16 +236,26 @@ class Wires(PhaseThread):
 
     # runs the thread
     def run(self):
-        # TODO
-        pass
+        self._running = True
+        self._temp =  None
+        while (self._running):
+            self._value = ''.join([str(int(pin.value)) for pin in self._component])
+            # check each wire
+            for i in range (5):
+                # if the wire is diconnected and shouldnt have been, fail
+                if (self._value[i] == '0') and (self._target[i] == '1') and not (self._value == self._temp):
+                    self._failed = True
+                    self._temp = self._value
+                # if the wires are all done, defuse
+                elif self._value == self._target:
+                    self._defused = True
 
     # returns the jumper wires state as a string
     def __str__(self):
         if (self._defused):
             return "DEFUSED"
         else:
-            # TODO
-            pass
+            return f'{self._value}/{int(self._value, 2)}'
 
 # the pushbutton phase
 class Button(PhaseThread):
@@ -258,7 +272,6 @@ class Button(PhaseThread):
         # set the RGB LED color
         i = 0
         self._pressed = False
-        
         
         while (self._running):
             # get the pushbutton's state
@@ -287,8 +300,6 @@ class Button(PhaseThread):
             
         else: #Blue
             print(choice([keypadHint,togglesHint]))
-            
-    
     
     # returns the pushbutton's state as a string
     def __str__(self):
@@ -304,13 +315,23 @@ class Toggles(PhaseThread):
 
     # runs the thread
     def run(self):
-        # TODO
-        pass
+        self._running = True
+        self._temp = None
+        while (self._running):
+            self._value = ''.join([str(int(pin.value)) for pin in self._component])
+            # check each toggle
+            for i in range (4):
+                # if a toggle was switched when it shouldnt have been, fail
+                if (self._value[i] == '1') and (self._target[i] == '0') and not (self._value == self._temp):
+                    self._failed = True
+                    self._temp = self._value
+                # if the toggles are correct, defuse
+                elif self._value == self._target:
+                    self._defused = True
 
     # returns the toggle switches state as a string
     def __str__(self):
         if (self._defused):
             return "DEFUSED"
         else:
-            # TODO
-            pass
+            return f'{self._value}/{int(self._value, 2)}'
