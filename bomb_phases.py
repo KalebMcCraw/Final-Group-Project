@@ -183,7 +183,18 @@ class Timer(PhaseThread):
         self._paused = not self._paused
         # blink the 7-segment display when paused
         self._component.blink_rate = (2 if self._paused else 0)
-
+    
+    #This is what happens when the button is pressed
+    def process(self, color):
+        if color == 0: #Red
+            self._value -= 15
+            
+        elif color == 1: #Green
+            self._value += 10
+            
+        else: #Blue
+            print(choice([keypadHint,togglesHint]))
+    
     # returns the timer as a string (mm:ss)
     def __str__(self):
         return f"{self._min}:{self._sec}"
@@ -259,47 +270,47 @@ class Wires(PhaseThread):
 
 # the pushbutton phase
 class Button(PhaseThread):
-    def __init__(self, component_state, component_rgb, target, name="Button"):
+    def __init__(self, component_state, component_rgb, target=None, name="Button"):
         super().__init__(name, component_state, target)
         # the default value is False/Released
         self._value = False
         # we need the pushbutton's RGB pins to set its color
         self._rgb = component_rgb
         self._color = None
+        self._runColor = None
+        self._activated = False
     # runs the thread
     def run(self):
         self._running = True
-        # set the RGB LED color
+        # initialize
         i = 0
         self._pressed = False
         
         while (self._running):
             # get the pushbutton's state
             self._value = self._component.value
+            # every second
             if i == 0:
+                # if its on
                 if self._color != None:
                     if self._pressed:
-                        self.command(self._color)
-                    self._pressed = False
+                        self._activated = True
+                        self._pressed = False
+                    self._rgb[self._color].value = True
+                    self._runColor = self._color
                     self._color = None
+                # if its off
                 elif randint(1,15) == 15:
                     self._color = randint(0,2)
-                    
+                    self._rgb[self._color].value = False
+            # check for press  
             if self._value and self._color != None:
                 self._pressed = True
-                    
+            # iterate
+            i += 1
+            if i>=10:
+                i = 0
             sleep(0.1)
-            
-    #This is what happens when the button is pressed
-    def process(color):
-        if color == 0: #Red
-            timer._value -= 15
-            
-        elif color == 1: #Green
-            timer._value += 10
-            
-        else: #Blue
-            print(choice([keypadHint,togglesHint]))
     
     # returns the pushbutton's state as a string
     def __str__(self):

@@ -47,7 +47,7 @@ def setup_phases():
     # setup the jumper wires thread
     wires = Wires(component_wires, wiresTarget)
     # setup the pushbutton thread
-    button = Button(component_button_state, component_button_RGB, button_target, button_color, timer)
+    button = Button(component_button_state, component_button_RGB)
     # bind the pushbutton to the LCD GUI so that its LED can be turned off when we quit
     gui.setButton(button)
     # setup the toggle switches thread
@@ -106,15 +106,10 @@ def check_phases():
     if (button._running):
         # update the GUI
         gui._lbutton["text"] = f"Button: {button}"
-        # the phase is defused -> stop the thread
-        if (button._defused):
-            button._running = False
-            active_phases -= 1
-        # the phase has failed -> strike
-        elif (button._failed):
-            strike()
-            # reset the button
-            button._failed = False
+        # check the button status to apply to the timer
+        if (button._activated):
+            timer.process(button._runColor)
+            button._activated = False
     # check the toggles
     if (toggles._running):
         # update the GUI
