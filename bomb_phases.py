@@ -13,6 +13,7 @@ from threading import Thread
 from time import sleep
 import os
 import sys
+from random import randint,choice
 
 #########
 # classes
@@ -117,9 +118,9 @@ class Lcd(Frame):
             self._timer._running = False
             self._timer._component.blink_rate = 0
             self._timer._component.fill(0)
-#             # turn off the pushbutton's LED
-#             for pin in self._button._rgb:
-#                 pin.value = True
+            # turn off the pushbutton's LED
+            for pin in self._button._rgb:
+                pin.value = True
         # exit the application
         exit(0)
 
@@ -258,48 +259,48 @@ class Wires(PhaseThread):
 
 # the pushbutton phase
 class Button(PhaseThread):
-    def __init__(self, component_state, component_rgb, target, color, timer, name="Button"):
+    def __init__(self, component_state, component_rgb, target, name="Button"):
         super().__init__(name, component_state, target)
         # the default value is False/Released
         self._value = False
-        # has the pushbutton been pressed?
-        self._pressed = False
         # we need the pushbutton's RGB pins to set its color
         self._rgb = component_rgb
-        # the pushbutton's randomly selected LED color
-        self._color = color
-        # we need to know about the timer (7-segment display) to be able to determine correct pushbutton releases in some cases
-        self._timer = timer
-
+        self._color = None
     # runs the thread
     def run(self):
         self._running = True
         # set the RGB LED color
-        self._rgb[0].value = False if self._color == "R" else True
-        self._rgb[1].value = False if self._color == "G" else True
-        self._rgb[2].value = False if self._color == "B" else True
+        i = 0
+        self._pressed = False
+        
         while (self._running):
             # get the pushbutton's state
             self._value = self._component.value
-            # it is pressed
-            if (self._value):
-                # note it
-                self._pressed = True
-            # it is released
-            else:
-                # was it previously pressed?
-                if (self._pressed):
-                    # check the release parameters
-                    # for R, nothing else is needed
-                    # for G or B, a specific digit must be in the timer (sec) when released
-                    if (not self._target or self._target in self._timer._sec):
-                        self._defused = True
-                    else:
-                        self._failed = True
-                    # note that the pushbutton was released
+            if i == 0:
+                if self._color != None:
+                    if self._pressed:
+                        self.command(self._color)
                     self._pressed = False
+                    self._color = None
+                elif randint(1,15) == 15:
+                    self._color = randint(0,2)
+                    
+            if self._value and self._color != None:
+                self._pressed = True
+                    
             sleep(0.1)
-
+            
+    #This is what happens when the button is pressed
+    def process(color):
+        if color == 0: #Red
+            timer._value -= 15
+            
+        elif color == 1: #Green
+            timer._value += 10
+            
+        else: #Blue
+            print(choice([keypadHint,togglesHint]))
+    
     # returns the pushbutton's state as a string
     def __str__(self):
         if (self._defused):
