@@ -156,16 +156,6 @@ def gen_wires():
 ###############################
 # generate the bomb's specifics
 ###############################
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-# generate the bomb's serial number (which also gets us the toggle and jumper target values)
-#  serial: the bomb's serial number
-#  toggles_target: the toggles phase defuse value
-#  wires_target: the wires phase defuse value
-serial, toggles_target, wires_target = genSerial()
-=======
-=======
->>>>>>> main
 # # generate the bomb's serial number (which also gets us the toggle and jumper target values)
 # #  serial: the bomb's serial number
 # #  toggles_target: the toggles phase defuse value
@@ -180,20 +170,6 @@ serial, toggles_target, wires_target = genSerial()
 # #  passphrase: the target plaintext passphrase
 # keyword, cipher_keyword, rot, keypad_target, passphrase = genKeypadCombination()
 # 
-<<<<<<< HEAD
-
-# generate the color of the pushbutton (which determines how to defuse the phase)
-button_color = choice(["R", "G", "B"])
-# appropriately set the target (R is None)
-button_target = None
-# G is the first numeric digit in the serial number
-if (button_color == "G"):
-    button_target = [ n for n in serial if n.isdigit() ][0]
-# B is the last numeric digit in the serial number
-elif (button_color == "B"):
-    button_target = [ n for n in serial if n.isdigit() ][-1]
->>>>>>> Stashed changes
-=======
 # # generate the color of the pushbutton (which determines how to defuse the phase)
 # button_color = choice(["R", "G", "B"])
 # # appropriately set the target (R is None)
@@ -204,7 +180,6 @@ elif (button_color == "B"):
 # # B is the last numeric digit in the serial number
 # elif (button_color == "B"):
 #     button_target = [ n for n in serial if n.isdigit() ][-1]
->>>>>>> main
 
 '''
 These variables are used to put information from the trivia lists into the components, gui, etc.
