@@ -28,11 +28,20 @@ class Lcd(Frame):
         self._timer = None
         # we need to know about the pushbutton to turn off its LED when the program exits
         self._button = None
-        # setup the initial "boot" GUI
-        self.setupBoot()
+        #open difficulty select screen
+        self.diff_screen()
 
+    
+    def diff_screen(self):
+        #for lama and johny to create difficulty screen
+        # run setupboot with ('e' , 'n', 'h') for difficulty var
+        
+    
     # sets up the LCD "boot" GUI
-    def setupBoot(self):
+    def setupBoot(self, d):
+        global difficulty
+        difficulty = d
+        self._diff = d
         # set column weights
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=2)
@@ -280,6 +289,8 @@ class Button(PhaseThread):
         self._color = None
         self._runColor = None
         self._activated = False
+        self._interval = 20 if difficulty  == 'e' else 10 if difficulty == 'n' else 5
+        self._chance = 8 if difficulty  == 'e' else 15 if difficulty == 'n' else 30
     # runs the thread
     def run(self):
         self._running = True

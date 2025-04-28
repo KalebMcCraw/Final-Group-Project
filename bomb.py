@@ -147,11 +147,11 @@ def check_phases():
 
 # handles a strike
 def strike():
-    global strikes_left
-    
-    # note the strike
-    strikes_left -= 1
-
+    timer._value -= 60
+    #gui._diff is the difficulty
+    time._value -= 30 if gui._diff == 'e' else 60 if gui._diff == 'n' else 120
+        
+        
 # turns off the bomb
 def turn_off():
     # stop all threads
