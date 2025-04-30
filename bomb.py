@@ -161,6 +161,7 @@ def strike():
     # gui._diff is the difficulty
     timer._value -= 30 if gui._diff == 'e' else 60 if gui._diff == 'n' else 120
 
+
 # turns off the bomb
 def turn_off():
     # stop all threads
