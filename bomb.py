@@ -69,13 +69,13 @@ def check_phases():
     # check the button
     if (button._running):
         # update the GUI
-        displayTxt2 += f"{button}\n\n"
+        displayTxt2 += f"{button}\n"
         # check the button status to apply to the timer
         if (button._activated):
             timer.process(button._runColor)
             button._activated = False
     else:
-        displayTxt1 += f"...\n\n"
+        displayTxt1 += f"...\n"
     # check the timer
     if (timer._running):
         # update the GUI
@@ -90,7 +90,7 @@ def check_phases():
     # check the keypad
     if (keypad._running):
         # update the GUI
-        displayTxt1 += f"{keypad}\n\n"
+        displayTxt1 += f"{keypad}\n"
         # the phase is defused -> stop the thread
         if (keypad._defused):
             keypad._running = False
@@ -102,11 +102,11 @@ def check_phases():
             keypad._failed = False
             keypad._value = ""
     else:
-        displayTxt1 += "...\n\n"
+        displayTxt1 += "...\n"
     # check the toggles
     if (toggles._running):
         # update the GUI
-        displayTxt1 += f"Toggles Input:\n{toggles}\n\n"
+        displayTxt1 += f"Toggles Input:\n{toggles}\n"
         # the phase is defused -> stop the thread
         if (toggles._defused):
             toggles._running = False
@@ -117,7 +117,7 @@ def check_phases():
             # reset the toggles
             toggles._failed = False
     else:
-        displayTxt1 += "Toggles Input:\n...\n\n"
+        displayTxt1 += "Toggles Input:\n...\n"
     # check the wires
     if (wires._running):
         # update the GUI
