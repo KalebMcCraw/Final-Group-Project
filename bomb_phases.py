@@ -59,29 +59,29 @@ class Lcd(Frame):
         self._boxTitle.place(x=50, y=40)
         
         self._canvas1 = Canvas(self._base, width=200, height=75)
-        self._btnK = tkinter.Button(self._canvas1, width=100, height=10, bg='#E0F0FF', text='Click to View\nKeypad Question', font=('Consolas', 16))
+        self._btnK = tkinter.Button(self._canvas1, width=100, height=10, bg='#E0F0FF', text='Click to View\nKeypad Question', font=('Consolas', 14))
         self._btnKWin = self._canvas1.create_window(100, 38, anchor=CENTER, window=self._btnK)
         self._canvas1.place(x=50, y=140)
         
         self._canvas2 = Canvas(self._base, width=200, height=75)
-        self._btnT = tkinter.Button(self._canvas2, width=100, height=10, bg='#E0F0FF', text='Click to View\nToggles Question', font=('Consolas', 16))
+        self._btnT = tkinter.Button(self._canvas2, width=100, height=10, bg='#E0F0FF', text='Click to View\nToggles Question', font=('Consolas', 14))
         self._btnTWin = self._canvas2.create_window(100, 38, anchor=CENTER, window=self._btnT)
         self._canvas2.place(x=300, y=140)
         
         self._canvas3 = Canvas(self._base, width=200, height=75)
-        self._btnW = tkinter.Button(self._canvas3, width=100, height=10, bg='#E0F0FF', text='Click to View\nWires Questions', font=('Consolas', 16))
+        self._btnW = tkinter.Button(self._canvas3, width=100, height=10, bg='#E0F0FF', text='Click to View\nWires Questions', font=('Consolas', 14))
         self._btnWWin = self._canvas3.create_window(100, 38, anchor=CENTER, window=self._btnW)
         self._canvas3.place(x=550, y=140)
         
         self._boxDisplay = Canvas(self._base, bg='#081020', width=325, height=200)
-        self._displayText1 = self._boxDisplay.create_text(5, 5, text='keypad display\n...\ntoggles display\n...\nwires display\n...', font=('Consolas', 18), fill='#FFFFFF', anchor=NW)
+        self._displayText1 = self._boxDisplay.create_text(5, 5, text='keypad display\n...\ntoggles display\n...\nwires display\n...', font=('Consolas', 14), fill='#FFFFFF', anchor=NW)
         self._boxDisplay.place(x=50, y=240)
         
-        self._exitImage = Image.open('graphics/images/exit.png').resize((48,48))
+        self._exitImage = Image.open('graphics/images/exit.png').resize((32,32))
         self._exitImg = ImageTk.PhotoImage(self._exitImage)
         
         self._boxExtra = Canvas(self._base, bg='#081020', width=325, height=200)
-        self._displayText2 = self._boxExtra.create_text(320, 5, text='button display\n...\ntimer display\n...\nexit button', font=('Consolas', 18), fill='#FFFFFF', anchor=NE, justify=RIGHT)
+        self._displayText2 = self._boxExtra.create_text(320, 5, text='button display\n...\ntimer display\n...\nexit button', font=('Consolas', 14), fill='#FFFFFF', anchor=NE, justify=RIGHT)
         self._exit = tkinter.Button(self._boxExtra, width=32, height=32, image=self._exitImg, command=self.quit)
         self._exitWin = self._boxExtra.create_window(325, 200, anchor=SE, window=self._exit)
         self._boxExtra.place(x=425, y=240)
