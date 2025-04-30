@@ -14,6 +14,7 @@ from time import sleep
 import os
 import sys
 from random import randint,choice
+from PIL import ImageTk, Image
 
 #########
 # classes
@@ -21,65 +22,72 @@ from random import randint,choice
 # the LCD display GUI
 class Lcd(Frame):
     def __init__(self, window):
-        super().__init__(window, bg="black")
+        super().__init__(window)
         # make the GUI fullscreen
         window.attributes("-fullscreen", True)
         # we need to know about the timer (7-segment display) to be able to pause/unpause it
         self._timer = None
         # we need to know about the pushbutton to turn off its LED when the program exits
         self._button = None
-        #open difficulty select screen
-        self.diff_screen()
+#         # open difficulty select screen
+#         self.diff_screen()
+        self.setDifficulty('e')
 
-    
     def diff_screen(self):
-        #for lama and johny to create difficulty screen
-        # run setupboot with ('e' , 'n', 'h') for difficulty var
-        
+        # FOR LAMA/JOHNY, CREATE DIFFICULTY SCREEN
+        # run setupBoot with ('e', 'n', 'h') for difficulty var
+        pass
     
     # sets up the LCD "boot" GUI
-    def setupBoot(self, d):
+    def setDifficulty(self, d):
+        # make difficulty global for other components to use
         global difficulty
         difficulty = d
         self._diff = d
-        # set column weights
-        self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, weight=2)
-        self.columnconfigure(2, weight=1)
-        # the scrolling informative "boot" text
-        self._lscroll = Label(self, bg="black", fg="white", font=("Courier New", 14), text="", justify=LEFT)
-        self._lscroll.grid(row=0, column=0, columnspan=3, sticky=W)
-        self.pack(fill=BOTH, expand=True)
+        
 
     # sets up the LCD GUI
     def setup(self):
-        # the timer
-        self._ltimer = Label(self, bg="black", fg="#00ff00", font=("Courier New", 18), text="Time left: ")
-        self._ltimer.grid(row=1, column=0, columnspan=3, sticky=W)
-        # the keypad passphrase
-        self._lkeypad = Label(self, bg="black", fg="#00ff00", font=("Courier New", 18), text="Keypad phase: ")
-        self._lkeypad.grid(row=2, column=0, columnspan=3, sticky=W)
-        # the jumper wires status
-        self._lwires = Label(self, bg="black", fg="#00ff00", font=("Courier New", 18), text="Wires phase: ")
-        self._lwires.grid(row=3, column=0, columnspan=3, sticky=W)
-        # the pushbutton status
-        self._lbutton = Label(self, bg="black", fg="#00ff00", font=("Courier New", 18), text="Button phase: ")
-        self._lbutton.grid(row=4, column=0, columnspan=3, sticky=W)
-        # the toggle switches status
-        self._ltoggles = Label(self, bg="black", fg="#00ff00", font=("Courier New", 18), text="Toggles phase: ")
-        self._ltoggles.grid(row=5, column=0, columnspan=2, sticky=W)
-        # the strikes left
-        self._lstrikes = Label(self, bg="black", fg="#00ff00", font=("Courier New", 18), text="Strikes left: ")
-        self._lstrikes.grid(row=5, column=2, sticky=W)
-        if (SHOW_BUTTONS):
-            # the pause button (pauses the timer)
-            self._bpause = tkinter.Button(self, bg="red", fg="white", font=("Courier New", 18), text="Pause", anchor=CENTER, command=self.pause)
-            self._bpause.grid(row=6, column=0, pady=40)
-            # the quit button
-            self._bquit = tkinter.Button(self, bg="red", fg="white", font=("Courier New", 18), text="Quit", anchor=CENTER, command=self.quit)
-            self._bquit.grid(row=6, column=2, pady=40)
+        # bg image
+        self._bgImage = Image.open('graphics/images/background.jpg').resize((800, 600))
+        self._bg = ImageTk.PhotoImage(self._bgImage)
+        self._base = Label(self, image=self._bg)
+        self._base.pack()
         
-
+        self._boxTitle = Canvas(self._base, bg='#E03040', width=700, height=100)
+        self._boxTitle.create_text(350, 50, text='The UTampa Trivia Bomb', font=('Consolas', 36, 'bold', 'italic'), fill='#FFFFFF')
+        self._boxTitle.place(x=50, y=25)
+        
+        self._canvas1 = Canvas(self._base, width=200, height=100)
+        self._btnK = tkinter.Button(self._canvas1, width=100, height=10, bg='#E0F0FF', text='Click to View\nKeypad Question', font=('Consolas', 16))
+        self._btnKWin = self._canvas1.create_window(100, 50, anchor=CENTER, window=self._btnK)
+        self._canvas1.place(x=50, y=175)
+        
+        self._canvas2 = Canvas(self._base, width=200, height=100)
+        self._btnT = tkinter.Button(self._canvas2, width=100, height=10, bg='#E0F0FF', text='Click to View\nToggles Question', font=('Consolas', 16))
+        self._btnTWin = self._canvas2.create_window(100, 50, anchor=CENTER, window=self._btnT)
+        self._canvas2.place(x=300, y=175)
+        
+        self._canvas3 = Canvas(self._base, width=200, height=100)
+        self._btnW = tkinter.Button(self._canvas3, width=100, height=10, bg='#E0F0FF', text='Click to View\nWires Questions', font=('Consolas', 16))
+        self._btnWWin = self._canvas3.create_window(100, 50, anchor=CENTER, window=self._btnW)
+        self._canvas3.place(x=550, y=175)
+        
+        self._boxDisplay = Canvas(self._base, bg='#081020', width=325, height=250)
+        self._displayText1 = self._boxDisplay.create_text(5, 5, text='keypad display\n...\n\ntoggles display\n...\n\nwires display\n...', font=('Consolas', 18), fill='#FFFFFF', anchor=NW)
+        self._boxDisplay.place(x=50, y=325)
+        
+        self._exitImage = Image.open('graphics/images/exit.png').resize((48,48))
+        self._exitImg = ImageTk.PhotoImage(self._exitImage)
+        
+        self._boxExtra = Canvas(self._base, bg='#081020', width=325, height=250)
+        self._displayText2 = self._boxExtra.create_text(320, 5, text='button display\n...\n\ntimer display\n...\n\nexit button', font=('Consolas', 18), fill='#FFFFFF', anchor=NE, justify=RIGHT)
+        self._exit = tkinter.Button(self._boxExtra, width=32, height=32, image=self._exitImg, command=self.quit)
+        self._exitWin = self._boxExtra.create_window(325, 250, anchor=SE, window=self._exit)
+        self._boxExtra.place(x=425, y=325)
+        
+        self.pack(fill=BOTH, expand=True)
+    
     # lets us pause/unpause the timer (7-segment display)
     def setTimer(self, timer):
         self._timer = timer
@@ -88,10 +96,10 @@ class Lcd(Frame):
     def setButton(self, button):
         self._button = button
 
-    # pauses the timer
-    def pause(self):
-        if (RPi):
-            self._timer.pause()
+#     # pauses the timer
+#     def pause(self):
+#         if (RPi):
+#             self._timer.pause()
 
     # setup the conclusion GUI (explosion/defusion)
     def conclusion(self, success=False):
@@ -187,12 +195,12 @@ class Timer(PhaseThread):
         self._min = f"{self._value // 60}".zfill(2)
         self._sec = f"{self._value % 60}".zfill(2)
 
-    # pauses and unpauses the timer
-    def pause(self):
-        # toggle the paused state
-        self._paused = not self._paused
-        # blink the 7-segment display when paused
-        self._component.blink_rate = (2 if self._paused else 0)
+#     # pauses and unpauses the timer
+#     def pause(self):
+#         # toggle the paused state
+#         self._paused = not self._paused
+#         # blink the 7-segment display when paused
+#         self._component.blink_rate = (2 if self._paused else 0)
     
     #This is what happens when the button is pressed
     def process(self, color):
@@ -289,8 +297,8 @@ class Button(PhaseThread):
         self._color = None
         self._runColor = None
         self._activated = False
-        self._interval = 20 if difficulty  == 'e' else 10 if difficulty == 'n' else 5
-        self._chance = 8 if difficulty  == 'e' else 15 if difficulty == 'n' else 30
+        self._interval = 20 if difficulty == 'e' else 10 if difficulty == 'n' else 5
+        self._chance = 8 if difficulty == 'e' else 15 if difficulty == 'n' else 30
     # runs the thread
     def run(self):
         self._running = True

@@ -17,22 +17,22 @@ def bootup(n=0):
     # if we're not animating (or we're at the end of the bootup text)
     if (not ANIMATE or n == len(boot_text)):
         # if we're not animating, render the entire text at once (and don't process \x00)
-        if (not ANIMATE):
-            gui._lscroll["text"] = boot_text.replace("\x00", "")
+#         if (not ANIMATE):
+#             gui._lscroll["text"] = boot_text.replace("\x00", "")
         # configure the remaining GUI widgets
         gui.setup()
         # setup the phase threads, execute them, and check their statuses
         if (RPi):
             setup_phases()
             check_phases()
-    # if we're animating
-    else:
-        # add the next character (but don't render \x00 since it specifies a longer pause)
-        if (boot_text[n] != "\x00"):
-            gui._lscroll["text"] += boot_text[n]
-
-        # scroll the next character after a slight delay (\x00 is a longer delay)
-        gui.after(25 if boot_text[n] != "\x00" else 750, bootup, n + 1)
+#     # if we're animating
+#     else:
+#         # add the next character (but don't render \x00 since it specifies a longer pause)
+#         if (boot_text[n] != "\x00"):
+#             gui._lscroll["text"] += boot_text[n]
+# 
+#         # scroll the next character after a slight delay (\x00 is a longer delay)
+#         gui.after(25 if boot_text[n] != "\x00" else 750, bootup, n + 1)
 
 # sets up the phase threads
 def setup_phases():
@@ -64,10 +64,22 @@ def setup_phases():
 def check_phases():
     global active_phases
     
+    displayTxt1 = "Keypad Input:\n"
+    displayTxt2 = "Button Input:\n"
+    # check the button
+    if (button._running):
+        # update the GUI
+        displayTxt2 += f"{button}\n\n"
+        # check the button status to apply to the timer
+        if (button._activated):
+            timer.process(button._runColor)
+            button._activated = False
+    else:
+        displayTxt1 += f"...\n\n"
     # check the timer
     if (timer._running):
         # update the GUI
-        gui._ltimer["text"] = f"Time left: {timer}"
+        displayTxt1 += f"Time Remaining:\n{timer}"
     else:
         # the countdown has expired -> explode!
         # turn off the bomb and render the conclusion GUI
@@ -78,7 +90,7 @@ def check_phases():
     # check the keypad
     if (keypad._running):
         # update the GUI
-        gui._lkeypad["text"] = f"Combination: {keypad}"
+        displayTxt1 += f"{keypad}\n\n"
         # the phase is defused -> stop the thread
         if (keypad._defused):
             keypad._running = False
@@ -89,31 +101,12 @@ def check_phases():
             # reset the keypad
             keypad._failed = False
             keypad._value = ""
-    # check the wires
-    if (wires._running):
-        # update the GUI
-        gui._lwires["text"] = f"Wires: {wires}"
-        # the phase is defused -> stop the thread
-        if (wires._defused):
-            wires._running = False
-            active_phases -= 1
-        # the phase has failed -> strike
-        elif (wires._failed):
-            strike()
-            # reset the wires
-            wires._failed = False
-    # check the button
-    if (button._running):
-        # update the GUI
-        gui._lbutton["text"] = f"Button: {button}"
-        # check the button status to apply to the timer
-        if (button._activated):
-            timer.process(button._runColor)
-            button._activated = False
+    else:
+        displayTxt1 += "...\n\n"
     # check the toggles
     if (toggles._running):
         # update the GUI
-        gui._ltoggles["text"] = f"Toggles: {toggles}"
+        displayTxt1 += f"Toggles Input:\n{toggles}\n\n"
         # the phase is defused -> stop the thread
         if (toggles._defused):
             toggles._running = False
@@ -123,9 +116,27 @@ def check_phases():
             strike()
             # reset the toggles
             toggles._failed = False
-
-    # note the strikes on the GUI
-    gui._lstrikes["text"] = f"Strikes left: {strikes_left}"
+    else:
+        displayTxt1 += "Toggles Input:\n...\n\n"
+    # check the wires
+    if (wires._running):
+        # update the GUI
+        displayTxt1 += f"Wires Input:\n{wires}"
+        # the phase is defused -> stop the thread
+        if (wires._defused):
+            wires._running = False
+            active_phases -= 1
+        # the phase has failed -> strike
+        elif (wires._failed):
+            strike()
+            # reset the wires
+            wires._failed = False
+    else:
+        displayTxt1 += "Wires Input:\n..."
+    
+    # fully udpate GUI text
+    gui._boxDisplay.itemconfigure(gui._displayText1, text=displayTxt1)
+    gui._boxExtra.itemconfigure(gui._displayText2, text=displayTxt2)
     # too many strikes -> explode!
     if (strikes_left == 0):
         # turn off the bomb and render the conclusion GUI
@@ -147,11 +158,10 @@ def check_phases():
 
 # handles a strike
 def strike():
-    timer._value -= 60
-    #gui._diff is the difficulty
-    time._value -= 30 if gui._diff == 'e' else 60 if gui._diff == 'n' else 120
-        
-        
+    # gui._diff is the difficulty
+    timer._value -= 30 if gui._diff == 'e' else 60 if gui._diff == 'n' else 120
+
+
 # turns off the bomb
 def turn_off():
     # stop all threads
