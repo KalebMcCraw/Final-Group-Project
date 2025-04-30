@@ -49,42 +49,42 @@ class Lcd(Frame):
     # sets up the LCD GUI
     def setup(self):
         # bg image
-        self._bgImage = Image.open('graphics/images/background.jpg').resize((800, 600))
+        self._bgImage = Image.open('graphics/images/background.jpg').resize((800, 480))
         self._bg = ImageTk.PhotoImage(self._bgImage)
         self._base = Label(self, image=self._bg)
         self._base.pack()
         
-        self._boxTitle = Canvas(self._base, bg='#E03040', width=700, height=100)
-        self._boxTitle.create_text(350, 50, text='The UTampa Trivia Bomb', font=('Consolas', 36, 'bold', 'italic'), fill='#FFFFFF')
-        self._boxTitle.place(x=50, y=25)
+        self._boxTitle = Canvas(self._base, bg='#E03040', width=700, height=75)
+        self._boxTitle.create_text(350, 38, text='The UTampa Trivia Bomb', font=('Consolas', 36, 'bold', 'italic'), fill='#FFFFFF')
+        self._boxTitle.place(x=50, y=40)
         
-        self._canvas1 = Canvas(self._base, width=200, height=100)
+        self._canvas1 = Canvas(self._base, width=200, height=75)
         self._btnK = tkinter.Button(self._canvas1, width=100, height=10, bg='#E0F0FF', text='Click to View\nKeypad Question', font=('Consolas', 16))
-        self._btnKWin = self._canvas1.create_window(100, 50, anchor=CENTER, window=self._btnK)
-        self._canvas1.place(x=50, y=175)
+        self._btnKWin = self._canvas1.create_window(100, 38, anchor=CENTER, window=self._btnK)
+        self._canvas1.place(x=50, y=140)
         
-        self._canvas2 = Canvas(self._base, width=200, height=100)
+        self._canvas2 = Canvas(self._base, width=200, height=75)
         self._btnT = tkinter.Button(self._canvas2, width=100, height=10, bg='#E0F0FF', text='Click to View\nToggles Question', font=('Consolas', 16))
-        self._btnTWin = self._canvas2.create_window(100, 50, anchor=CENTER, window=self._btnT)
-        self._canvas2.place(x=300, y=175)
+        self._btnTWin = self._canvas2.create_window(100, 38, anchor=CENTER, window=self._btnT)
+        self._canvas2.place(x=300, y=140)
         
-        self._canvas3 = Canvas(self._base, width=200, height=100)
+        self._canvas3 = Canvas(self._base, width=200, height=75)
         self._btnW = tkinter.Button(self._canvas3, width=100, height=10, bg='#E0F0FF', text='Click to View\nWires Questions', font=('Consolas', 16))
-        self._btnWWin = self._canvas3.create_window(100, 50, anchor=CENTER, window=self._btnW)
-        self._canvas3.place(x=550, y=175)
+        self._btnWWin = self._canvas3.create_window(100, 38, anchor=CENTER, window=self._btnW)
+        self._canvas3.place(x=550, y=140)
         
-        self._boxDisplay = Canvas(self._base, bg='#081020', width=325, height=250)
-        self._displayText1 = self._boxDisplay.create_text(5, 5, text='keypad display\n...\n\ntoggles display\n...\n\nwires display\n...', font=('Consolas', 18), fill='#FFFFFF', anchor=NW)
-        self._boxDisplay.place(x=50, y=325)
+        self._boxDisplay = Canvas(self._base, bg='#081020', width=325, height=200)
+        self._displayText1 = self._boxDisplay.create_text(5, 5, text='keypad display\n...\ntoggles display\n...\nwires display\n...', font=('Consolas', 18), fill='#FFFFFF', anchor=NW)
+        self._boxDisplay.place(x=50, y=240)
         
         self._exitImage = Image.open('graphics/images/exit.png').resize((48,48))
         self._exitImg = ImageTk.PhotoImage(self._exitImage)
         
-        self._boxExtra = Canvas(self._base, bg='#081020', width=325, height=250)
-        self._displayText2 = self._boxExtra.create_text(320, 5, text='button display\n...\n\ntimer display\n...\n\nexit button', font=('Consolas', 18), fill='#FFFFFF', anchor=NE, justify=RIGHT)
+        self._boxExtra = Canvas(self._base, bg='#081020', width=325, height=200)
+        self._displayText2 = self._boxExtra.create_text(320, 5, text='button display\n...\ntimer display\n...\nexit button', font=('Consolas', 18), fill='#FFFFFF', anchor=NE, justify=RIGHT)
         self._exit = tkinter.Button(self._boxExtra, width=32, height=32, image=self._exitImg, command=self.quit)
-        self._exitWin = self._boxExtra.create_window(325, 250, anchor=SE, window=self._exit)
-        self._boxExtra.place(x=425, y=325)
+        self._exitWin = self._boxExtra.create_window(325, 200, anchor=SE, window=self._exit)
+        self._boxExtra.place(x=425, y=240)
         
         self.pack(fill=BOTH, expand=True)
     
