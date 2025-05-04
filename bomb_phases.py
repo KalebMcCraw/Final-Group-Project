@@ -1,7 +1,7 @@
 #################################
 # CSC 102 Defuse the Bomb Project
 # GUI and Phase class definitions
-# Team: 
+# Team: Lama A, Janpolad G, Kaleb M, Teya S.
 #################################
 
 # import the configs
@@ -69,6 +69,120 @@ class Lcd(Frame):
             self._bquit = tkinter.Button(self, bg="red", fg="white", font=("Courier New", 18), text="Quit", anchor=CENTER, command=self.quit)
             self._bquit.grid(row=6, column=2, pady=40)
 
+        # bg image
+        self._bgImage = Image.open('graphics/images/background.jpg').resize((800, 480))
+        self._bg = ImageTk.PhotoImage(self._bgImage)
+        self._base = Label(self, image=self._bg)
+        self._base.pack()
+        
+        self._boxTitle = Canvas(self._base, bg='#E03040', width=700, height=75)
+        self._boxTitle.create_text(350, 38, text='The UTampa Trivia Bomb', font=('Consolas', 36, 'bold', 'italic'), fill='#FFFFFF')
+        self._boxTitle.place(x=50, y=40)
+        
+        self._canvas1 = Canvas(self._base, width=200, height=75)
+        self._btnK = tkinter.Button(self._canvas1, width=100, height=10, bg='#E0F0FF',text='Click to View\nKeypad Question', font=('Consolas', 14), command=self.keypad_screen)
+        self._btnKWin = self._canvas1.create_window(100, 38, anchor=CENTER, window=self._btnK)
+        self._canvas1.place(x=50, y=140)
+        
+        self._canvas2 = Canvas(self._base, width=200, height=75)
+        self._btnT = tkinter.Button(self._canvas2, width=100, height=10, bg='#E0F0FF',text='Click to View\nToggles Question', font=('Consolas', 14), command=self.toggles_screen)
+        self._btnTWin = self._canvas2.create_window(100, 38, anchor=CENTER, window=self._btnT)
+        self._canvas2.place(x=300, y=140)
+        
+        self._canvas3 = Canvas(self._base, width=200, height=75)
+        self._btnW = tkinter.Button(self._canvas3, width=100, height=10, bg='#E0F0FF',text='Click to View\nWires Questions', font=('Consolas', 14), command=self.wires_screen)
+        self._btnWWin = self._canvas3.create_window(100, 38, anchor=CENTER, window=self._btnW)
+        self._canvas3.place(x=550, y=140)
+        
+        self._boxDisplay = Canvas(self._base, bg='#081020', width=325, height=200)
+        self._displayText1 = self._boxDisplay.create_text(5, 5, text='keypad display\n...\ntoggles display\n...\nwires display\n...', font=('Consolas', 14), fill='#FFFFFF', anchor=NW)
+        self._boxDisplay.place(x=50, y=240)
+        
+        self._exitImage = Image.open('graphics/images/exit.png').resize((32,32))
+        self._exitImg = ImageTk.PhotoImage(self._exitImage)
+        
+        self._boxExtra = Canvas(self._base, bg='#081020', width=325, height=200)
+        self._displayText2 = self._boxExtra.create_text(320, 5, text='button display\n...\ntimer display\n...\nexit button', font=('Consolas', 14), fill='#FFFFFF', anchor=NE, justify=RIGHT)
+        self._exit = tkinter.Button(self._boxExtra, width=32, height=32, image=self._exitImg, command=self.quit)
+        self._exitWin = self._boxExtra.create_window(325, 200, anchor=SE, window=self._exit)
+        self._boxExtra.place(x=425, y=240)
+        
+        self.pack(fill=BOTH, expand=True)
+
+    def keypad_screen(self):
+        win = Toplevel(self)
+        win.title("Keypad Phase")
+        win.geometry("800x480")
+        win.configure(bg='black')
+
+        # Optional image (if available)
+        try:
+            img = Image.open("graphics/images/keypad_hint.jpg").resize((400, 200))
+            photo = ImageTk.PhotoImage(img)
+            img_label = Label(win, image=photo, bg='black')
+            img_label.image = photo  # keeps reference
+            img_label.pack(pady=(20, 10))
+        except:
+            pass  # image not required
+
+        # Question
+        Label(win,text=keypadQuestion,font=('Consolas', 16),fg='white',bg='black',wraplength=700,justify='center').pack(pady=10)
+
+        # Optional hint
+        if keypadHint:
+            Label(win,text=f"Hint: {keypadHint}",font=('Consolas', 12, 'italic'),fg='gray',bg='black',wraplength=700).pack(pady=(0, 20))
+
+        # Back button
+        Button(win,text="← Back",font=('Consolas', 12),bg='red',fg='white',command=win.destroy).pack(pady=10)
+
+    def toggles_screen(self):
+        win = Toplevel(self)
+        win.geometry("800x480")
+        win.configure(bg='black')
+        win.title("Toggles Phase")
+
+        # Optional image
+        img = Image.open("graphics/images/toggles_hint.jpg").resize((400, 200))
+        photo = ImageTk.PhotoImage(img)
+        Label(win, image=photo, bg='black').pack(pady=(20, 10))
+        win.image = photo  # keeps reference
+
+        # Question
+        Label(win, text=togglesQuestion, font=('Consolas', 16), fg='white', bg='black',wraplength=700, justify='center').pack(pady=10)
+
+        # Hint
+        if togglesHint:
+            Label(win, text=f"Hint: {togglesHint}", font=('Consolas', 12, 'italic'), fg='gray',bg='black', wraplength=700).pack(pady=5)
+
+        # Back button
+        Button(win, text="← Back", font=('Consolas', 12), bg='red', fg='white',command=win.destroy).pack(pady=20)
+
+    def wires_screen(self):
+        win = Toplevel(self)
+        win.title("Wires Phase")
+        win.geometry("800x480")
+        win.configure(bg='black')
+
+        # Optional image
+        try:
+            img = Image.open("graphics/images/wires_hint.jpg").resize((400, 200))
+            photo = ImageTk.PhotoImage(img)
+            img_label = Label(win, image=photo, bg='black')
+            img_label.image = photo  # keep reference
+            img_label.pack(pady=(20, 10))
+        except:
+            pass  # prevents crashing in case of no image
+
+    # Combine all 5 wire questions
+    wires = [wiresQ1[0], wiresQ2[0], wiresQ3[0], wiresQ4[0], wiresQ5[0]]
+    question_text = "\n\n".join(wires)
+
+    Label(
+        win,text=question_text,font=('Consolas', 16),fg='white',bg='black',wraplength=750,justify='center').pack(pady=(10, 20))
+
+    # Back button
+    Button(win,text="← Back",font=('Consolas', 12),bg='red',fg='white',command=win.destroy).pack(pady=(10, 20))
+
     # lets us pause/unpause the timer (7-segment display)
     def setTimer(self, timer):
         self._timer = timer
@@ -77,36 +191,39 @@ class Lcd(Frame):
     def setButton(self, button):
         self._button = button
 
-    # pauses the timer
+    #pauses the timer
     def pause(self):
         if (RPi):
             self._timer.pause()
 
-    # setup the conclusion GUI (explosion/defusion)
     def conclusion(self, success=False):
-        # destroy/clear widgets that are no longer needed
-        self._lscroll["text"] = ""
-        self._ltimer.destroy()
-        self._lkeypad.destroy()
-        self._lwires.destroy()
-        self._lbutton.destroy()
-        self._ltoggles.destroy()
-        self._lstrikes.destroy()
-        if (SHOW_BUTTONS):
-            self._bpause.destroy()
-            self._bquit.destroy()
+        win = Toplevel(self)
+        win.title("Bomb Status")
+        win.geometry("800x480")
+        win.configure(bg='black')
 
-        # reconfigure the GUI
-        # the retry button
-        self._bretry = tkinter.Button(self, bg="red", fg="white", font=("Courier New", 18), text="Retry", anchor=CENTER, command=self.retry)
-        self._bretry.grid(row=1, column=0, pady=40)
-        # the quit button
-        self._bquit = tkinter.Button(self, bg="red", fg="white", font=("Courier New", 18), text="Quit", anchor=CENTER, command=self.quit)
-        self._bquit.grid(row=1, column=2, pady=40)
+        # Image (is optional, based on outcome)
+        try:
+            img_path = "graphics/images/defused.jpg" if success else "graphics/images/explosion.jpg"
+            img = Image.open(img_path).resize((600, 300))
+            photo = ImageTk.PhotoImage(img)
+            img_label = Label(win, image=photo, bg='black')
+            img_label.image = photo  # retains reference
+            img_label.pack(pady=(20, 10))
+        except:
+            Label(win,text="SUCCESS" if success else "💥 BOOM 💥",font=('Consolas', 32, 'bold'),fg='green' if success else 'red',bg='black').pack(pady=30)
 
-    # re-attempts the bomb (after an explosion or a successful defusion)
+    #Message
+    Label(win,text="Bomb successfully defused!" if success else "You failed to defuse the bomb in time.",font=('Consolas', 18),fg='white',bg='black',wraplength=700,justify='center').pack(pady=(10, 20))
+
+    # Retry button
+    Button(win,text="Retry",font=('Consolas', 14),bg='blue',fg='white',command=self.retry).pack(pady=(0, 10))
+
+    # Quit button
+    Button(win,text="Quit",font=('Consolas', 14),bg='red', fg='white',command=self.quit).pack(pady=(0, 10))
+    # reattempts the bomb (after an explosion or a successful defusion
     def retry(self):
-        # re-launch the program (and exit this one)
+        # re-launches  the program (and exit this one)
         os.execv(sys.executable, ["python3"] + [sys.argv[0]])
         exit(0)
 
