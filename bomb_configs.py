@@ -12,6 +12,7 @@ SHOW_BUTTONS = False # show the Pause and Quit buttons on the main LCD GUI?
 COUNTDOWN = 300      # the initial bomb countdown value (seconds)
 NUM_STRIKES = 5      # the total strikes allowed before the bomb "explodes"
 NUM_PHASES = 4       # the total number of initial active bomb phases
+DIFFICULTY = ["casual"] # difficulty of the game
 
 # imports
 from random import randint, shuffle, choice

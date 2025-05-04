@@ -28,7 +28,31 @@ class Lcd(Frame):
         # we need to know about the pushbutton to turn off its LED when the program exits
         self._button = None
         # setup the initial "boot" GUI
+        self.after(500, self.diff_screen)
         self.setupBoot()
+
+    def diff_screen(self):
+        win = Toplevel(self)
+        win.title("Choose Your Destiny")
+        win.geometry("800x480")
+        win.configure(bg='black')
+
+        Label(win, text="How do you launch this game?", font=('Consolas', 22, 'bold'),
+              fg='white', bg='black').pack(pady=(40, 20))
+
+        Button(win, text="💤 Casual Player", font=('Consolas', 18), bg='gray', fg='white',
+               width=25, command=lambda: [win.destroy(), bootup()]).pack(pady=10)
+
+        Button(win, text="🧠 Seasoned Operator", font=('Consolas', 18), bg='navy', fg='white',
+               width=25, command=lambda: [win.destroy(), bootup()]).pack(pady=10)
+
+        Button(win, text="💀 Expert Mode", font=('Consolas', 18), bg='darkred', fg='white',
+               width=25, command=lambda: [win.destroy(), bootup()]).pack(pady=10)
+        
+        def selected_difficulty(self, win, level):
+            DIFFICULTY[0] = level
+            win.destroy()
+            self.after(1000, bootup)
 
     # sets up the LCD "boot" GUI
     def setupBoot(self):

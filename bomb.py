@@ -37,7 +37,15 @@ def bootup(n=0):
 # sets up the phase threads
 def setup_phases():
     global timer, keypad, wires, button, toggles
-    
+    if DIFFICULTY[0] == "casual":
+        COUNTDOWN = 180
+        NUM_STRIKES = 5
+    elif DIFFICULTY[0] == "seasoned":
+        COUNTDOWN = 120
+        NUM_STRIKES = 3
+    elif DIFFICULTY[0] == "expert":
+        COUNTDOWN = 90
+        NUM_STRIKES = 1
     # setup the timer thread
     timer = Timer(component_7seg, COUNTDOWN)
     # bind the 7-segment display to the LCD GUI so that it can be paused/unpaused from the GUI
