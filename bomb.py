@@ -8,7 +8,7 @@
 from bomb_configs import *
 # import the phases
 from bomb_phases import *
-
+import pygame
 ###########
 # functions
 ###########
@@ -73,6 +73,11 @@ def check_phases():
         # turn off the bomb and render the conclusion GUI
         turn_off()
         gui.after(100, gui.conclusion, False)
+        try:
+            pygame.mixer.music.stop()
+        except:
+            pass  # prevents crash if mixer wasn’t playing
+
         # don't check any more phases
         return
     # check the keypad
@@ -181,6 +186,12 @@ def turn_off():
 window = Tk()
 gui = Lcd(window)
 
+# start background music
+pygame.mixer.init()
+pygame.mixer.music.load("audio/ambience.mp3")
+pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.play(-1)
+
 # initialize the bomb strikes and active phases (i.e., not yet defused)
 strikes_left = NUM_STRIKES
 active_phases = NUM_PHASES
@@ -190,3 +201,4 @@ gui.after(1000, bootup)
 
 # display the LCD GUI
 window.mainloop()
+
