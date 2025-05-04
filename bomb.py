@@ -1,7 +1,7 @@
 #################################
 # CSC 102 Defuse the Bomb Project
 # Main program
-# Team: 
+# Team: Lama A, Janpolad G, Kaleb M, Teya S.
 #################################
 
 # import the configs
