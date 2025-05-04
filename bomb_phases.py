@@ -67,6 +67,7 @@ class Lcd(Frame):
 
     # sets up the LCD GUI
     def setup(self):
+<<<<<<< Updated upstream
         # the timer
         self._ltimer = Label(self, bg="black", fg="#00ff00", font=("Courier New", 18), text="Time left: ")
         self._ltimer.grid(row=1, column=0, columnspan=3, sticky=W)
@@ -92,6 +93,93 @@ class Lcd(Frame):
             # the quit button
             self._bquit = tkinter.Button(self, bg="red", fg="white", font=("Courier New", 18), text="Quit", anchor=CENTER, command=self.quit)
             self._bquit.grid(row=6, column=2, pady=40)
+=======
+        # bg image
+        self._bgImage = Image.open('graphics/images/background.jpg').resize((800, 480))
+        self._bg = ImageTk.PhotoImage(self._bgImage)
+        self._base = Label(self, image=self._bg)
+        self._base.pack()
+        
+        self._boxTitle = Canvas(self._base, bg='#E03040', width=700, height=75)
+        self._boxTitle.create_text(350, 38, text='The UTampa Trivia Bomb', font=('Consolas', 36, 'bold', 'italic'), fill='#FFFFFF')
+        self._boxTitle.place(x=50, y=40)
+        
+        self._canvas1 = Canvas(self._base, width=200, height=75)
+        self._btnK = tkinter.Button(self._canvas1, width=100, height=10, bg='#E0F0FF',text='Click to View\nKeypad Question', font=('Consolas', 14), command=self.keypad_screen)
+        self._btnKWin = self._canvas1.create_window(100, 38, anchor=CENTER, window=self._btnK)
+        self._canvas1.place(x=50, y=140)
+        
+        self._canvas2 = Canvas(self._base, width=200, height=75)
+        self._btnT = tkinter.Button(self._canvas2, width=100, height=10, bg='#E0F0FF',text='Click to View\nToggles Question', font=('Consolas', 14), command=self.toggles_screen)
+        self._btnTWin = self._canvas2.create_window(100, 38, anchor=CENTER, window=self._btnT)
+        self._canvas2.place(x=300, y=140)
+        
+        self._canvas3 = Canvas(self._base, width=200, height=75)
+        self._btnW = tkinter.Button(self._canvas3, width=100, height=10, bg='#E0F0FF',text='Click to View\nWires Questions', font=('Consolas', 14), command=self.wires_screen)
+        self._btnWWin = self._canvas3.create_window(100, 38, anchor=CENTER, window=self._btnW)
+        self._canvas3.place(x=550, y=140)
+        
+        self._boxDisplay = Canvas(self._base, bg='#081020', width=325, height=200)
+        self._displayText1 = self._boxDisplay.create_text(5, 5, text='keypad display\n...\ntoggles display\n...\nwires display\n...', font=('Consolas', 14), fill='#FFFFFF', anchor=NW)
+        self._boxDisplay.place(x=50, y=240)
+        
+        self._exitImage = Image.open('graphics/images/exit.png').resize((32,32))
+        self._exitImg = ImageTk.PhotoImage(self._exitImage)
+        
+        self._boxExtra = Canvas(self._base, bg='#081020', width=325, height=200)
+        self._displayText2 = self._boxExtra.create_text(320, 5, text='button display\n...\ntimer display\n...\nexit button', font=('Consolas', 14), fill='#FFFFFF', anchor=NE, justify=RIGHT)
+        self._exit = tkinter.Button(self._boxExtra, width=32, height=32, image=self._exitImg, command=self.quit)
+        self._exitWin = self._boxExtra.create_window(325, 200, anchor=SE, window=self._exit)
+        self._boxExtra.place(x=425, y=240)
+        
+        self.pack(fill=BOTH, expand=True)
+
+    def keypad_screen(self):
+        win = Toplevel(self)
+        win.title("Keypad Questions")
+        win.geometry("800x480")
+        win.configure(bg='black')
+
+        canvas = Canvas(win, width=800, height=480, bg='black', highlightthickness=0)
+        canvas.pack()
+
+        canvas.create_text(400, 50, text="KEYPAD QUESTIONS:", fill='white', font=('Consolas', 24, 'bold'))
+        canvas.create_text(400, 150, text=keypadQuestion, fill='white', font=('Consolas', 16), width=700)
+        if keypadHint is True:
+            canvas.create_text(400, 300, text=f"Hint: {keypadHint}", fill='gray', font=('Consolas', 14), width=700)
+
+    def toggles_screen(self):
+        win = Toplevel(self)
+        win.title("Toggles Questions")
+        win.geometry("800x480")
+        win.configure(bg='black')
+
+        canvas = Canvas(win, width=800, height=480, bg='black', highlightthickness=0)
+        canvas.pack()
+
+        canvas.create_text(400, 50, text="TOGGLES QUESTIONS:", fill='white', font=('Consolas', 24, 'bold'))
+        canvas.create_text(400, 150, text=togglesQuestion, fill='white', font=('Consolas', 16), width=700)
+        if togglesHint:
+            canvas.create_text(400, 300, text=f"Hint: {togglesHint}", fill='gray', font=('Consolas', 14), width=700)
+
+    def wires_screen(self):
+        win = Toplevel(self)
+        win.title("Wires Questions")
+        win.geometry("800x480")
+        win.configure(bg='black')
+
+        canvas = Canvas(win, width=800, height=480, bg='black', highlightthickness=0)
+        canvas.pack()
+
+        canvas.create_text(400, 30, text="WIRES QUESTIONS:", fill='white', font=('Consolas', 24, 'bold'))
+
+        wires = [wiresQ1[0], wiresQ2[0], wiresQ3[0], wiresQ4[0], wiresQ5[0]]
+        y = 100
+        for w in wires:
+            canvas.create_text(400, y, text=w, fill='white', font=('Consolas', 14), width=700)
+            y += 60
+
+>>>>>>> Stashed changes
 
         # bg image
         self._bgImage = Image.open('graphics/images/background.jpg').resize((800, 480))
