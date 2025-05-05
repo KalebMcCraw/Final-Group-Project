@@ -13,7 +13,7 @@ from bomb_phases import *
 # functions
 ###########
 # generates the bootup sequence on the LCD
-def bootup(n=0):
+def bootup():
     # set up the difficuty select screen
     gui.diff_screen()
     # create a sounds thread
