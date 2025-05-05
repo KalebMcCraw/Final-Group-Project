@@ -12,7 +12,7 @@ SHOW_BUTTONS = True # show the Pause and Quit buttons on the main LCD GUI?
 COUNTDOWN = 300      # the initial bomb countdown value (seconds)
 NUM_STRIKES = 5      # the total strikes allowed before the bomb "explodes"
 NUM_PHASES = 4       # the total number of initial active bomb phases
-
+# Difficulty = ["casual"] (removed)
 # imports
 from random import randint, shuffle, choice, sample
 from string import ascii_uppercase
@@ -93,7 +93,7 @@ Generate keypad; return a random written-response question.
 def gen_keypad():
     # format: question, answers, hint, difficulty, image, voiceline, hint voice
     return choice([('Who is this?', ['75268', '4367975268', '43679275268'], 'The oldest building at the University of Tampa is named after this individual.', None, 'whoisthis1.jpg', 'kp_who1.mp3', 'hint-oldest.mp3'),
-                 ('Who is this?', ['32452374', '83737232452374', '8373722246233732452374', '77374336832452374'], 'This individual is in charge of the University of Tampa.', None, 'whoisthis2.jpg>', 'kp_who2.mp3', 'hint-incharge.mp3'),
+                 ('Who is this?', ['32452374', '83737232452374', '8373722246233732452374', '77374336832452374'], 'This individual is in charge of the University of Tampa.', None, 'whoisthis2.jpg', 'kp_who2.mp3', 'hint-incharge.mp3'),
                  ('Which building headquarters for the Campus Safety team?', ['3259', '466682846628453464', '4666828466263265522672846628453464', '265522672846628453464'], 'The building is at the intersection of N Boulevard and W North A Street.', None, 'csafety.jpg', 'kp_hq1.mp3', 'hint-intersection.mp3'),
                  ('Which building headquarters for the Bursar’s office?', ['75268'], 'The building is the most famous one on the University of Tampa’s campus.', None, 'bursar.jpg', 'kp_hq2.mp3', 'hint-popular.mp3'),
                  ('Name a restaurant in the Vaughn Center.', ['85846283346464', '244253452', '3467834627684377', '37374273284667', '84347455', '8438847455', '8847455', '22338379', '52428262'], 'One of these places is one of the most popular fast food chains in the United States.', None, 'vaughn.jpg', 'kp_restaurant.mp3', 'hint-fastfood.mp3'),
@@ -118,41 +118,42 @@ def gen_toggles():
                  ('When did the Cass Building open?', '1000', 'The same year a unique president was elected.', None, 'cass.jpg', 'tog_8.mp3', 'hint-8.mp3'),
                  ('What time does the Benson and Alex Fitness Center open on Saturday?', '1001', 'What number of lives people claim cats have.', None, 'fitness.jpg', 'tog_9.mp3', 'hint-9.mp3'),
                  ('How many stories tall is the Grand Center?', '1010', 'A big fat hen!', None, 'gc.jpg', 'tog_10.mp3', 'hint-10.mp3'),
-                 ('University of Tampa president Teresa Abi-Nader Dahlberg is the ___th president of the university.', '1011', 'Each president has, on average, served for around 8-9 years.', None, 'dahlberg.jpg', 'tog_11.mp3', 'hint-11.mp3'),
+                 ('University of Tampa president Teresa Abi-Nader Dahlberg is the ___th\n president of the university.', '1011', 'Each president has, on average, served for around 8-9 years.', None, 'dahlberg.jpg', 'tog_11.mp3', 'hint-11.mp3'),
                  ('How many residence halls are at the University of Tampa?', '1100', 'A dime...', None, 'residence.jpg', 'tog_12.mp3', 'hint-12.mp3'),
                  ('How many sororities are there in the University of Tampa?', '1101', 'A spooky Friday.', None, 'sorority.jpg', 'tog_13.mp3', 'hint-13.mp3'),
-                 ('What rank does U.S. News & World Report give the University of Tampa in the Regional Universities South category? (2025 Rankings)', '1110', 'The same as the youngest age one can drive in the U.S.', None, 'tampa.jpg', 'tog_14.mp3', 'hint-14.mp3'),
+                 ('What rank does U.S. News & World Report give the University of Tampa\n in the Regional Universities South category? (2025 Rankings)', '1110', 'The same as the youngest age one can drive in the U.S.', None, 'tampa.jpg', 'tog_14.mp3', 'hint-14.mp3'),
                  ('What are the final two digits of the LASER Team’s phone number?', '1111', 'The same number as the iPhone model that released in 2023.', None, 'laser.jpg', 'tog_15.mp3', 'hint-15.mp3')])
 '''
 Generate wires; return 5 random True/False statements.
 '''
 def gen_wires():
     # format: statement, value, difficulty, voiceline
-    return sample([['There is a McDonalds on the University of Tampa’s campus.', False, None, 'w_mcd.mp3'],
-                   ['The University of Tampa is the largest university in Tampa.', False, None, 'w_largest.mp3'],
-                   ['The University of Tampa has fraternities and sororities.', True, None, 'w_frat.mp3'],
-                   ['You can rent media recording equipment from the Cass Communications Building.', True, None, 'w_media.mp3'],
-                   ['The University of Tampa has a safety team that works 24/7.', True, None, 'w_safety.mp3'],
-                   ['The tallest building at the University of Tampa is the Ferman Center for the Arts.', False, None, 'w_ferman.mp3'],
-                   ['The University of Tampa opened before any development of Harbour Island, Tampa.', True, None, 'w_harbour.mp3'],
-                   ['The newest building at the University of Tampa is the Jenkins Tech Building.', False, None, 'w_jenkins.mp3'],
-                   ['There are over 1,000 faculty members at the University of Tampa.', False, None, 'w_faculty.mp3'],
-                   ['The University of Tampa has an electrical engineering program.', False, None, 'w_engineer.mp3'],
-                   ['The University of Tampa’s official colors are red, black, and orange.', False, None, 'w_colors.mp3'],
-                   ['The University of Tampa was founded in 1931.', True, None, 'w_found.mp3'],
-                   ['There are over 200 majors offered by the University of Tampa.', False, None, 'w_major.mp3'],
-                   ['The University of Tampa competes in NCAA Division II sports.', True, None, 'w_ncaa.mp3'],
-                   ['There have been 11 presidents of the University of Tampa.', True, None, 'w_pres.mp3'],
-                   ['In our context, UT stands for the University of Texas.', False, None, 'w_texas.mp3'],
-                   ['Plant Hall is designated as a national historic landmark.', True, None, 'w_landmark.mp3'],
-                   ['The University of Tampa has hundreds of student clubs.', True, None, 'w_clubs.mp3'],
-                   ['The University of Tampa offers rentable e-scooters to students and faculty.', False, None, 'w_rentable.mp3'],
-                   ['You can see downtown Tampa from campus.', True, None, 'w_downtown.mp3'],
-                   ['The University of Tampa is always running, even during extreme weather events such as hurricanes.', False, None, 'w_running.mp3'],
-                   ['The University of Tampa has a special alert messaging service for emergency use.', True, None, 'w_alert.mp3'],
-                   ['The current mayor of Tampa, Jane Castor, is a University of Tampa alumni.', True, None, 'w_castor.mp3'],
-                   ['Elvis Presley performed in the Sykes Chapel.', False, None, 'w_elvis.mp3'],
-                   ['The University of Tampa is situated directly on the shore of Tampa Bay.', False, None, 'w_bay.mp3']], 5)
+    return sample([['•There is a McDonalds on the University of Tampa’s campus.', False, None, 'w_mcd.mp3'],
+                   ['•The University of Tampa is the largest university in Tampa.', False, None, 'w_largest.mp3'],
+                   ['•The University of Tampa has fraternities and sororities.', True, None, 'w_frat.mp3'],
+                   ['•You can rent media recording equipment from the Cass Communications\n Building.', True, None, 'w_media.mp3'],
+                   ['•The University of Tampa has a safety team that works 24/7.', True, None, 'w_safety.mp3'],
+                   ['•The tallest building at the University of Tampa is the Ferman Center\n for the Arts.', False, None, 'w_ferman.mp3'],
+                   ['•The University of Tampa opened before any development of Harbour\n Island, Tampa.', True, None, 'w_harbour.mp3'],
+                   ['•The newest building at the University of Tampa is the Jenkins Tech\n Building.', False, None, 'w_jenkins.mp3'],
+                   ['•There are over 1,000 faculty members at the University of Tampa.', False, None, 'w_faculty.mp3'],
+                   ['•The University of Tampa has an electrical engineering program.', False, None, 'w_engineer.mp3'],
+                   ['•The University of Tampa’s official colors are red, black, and orange.', False, None, 'w_colors.mp3'],
+                   ['•The University of Tampa was founded in 1931.', True, None, 'w_found.mp3'],
+                   ['•There are over 200 majors offered by the University of Tampa.', False, None, 'w_major.mp3'],
+                   ['•The University of Tampa competes in NCAA Division II sports.', True, None, 'w_ncaa.mp3'],
+                   ['•There have been 11 presidents of the University of Tampa.', True, None, 'w_pres.mp3'],
+                   ['•In our context, UT stands for the University of Texas.', False, None, 'w_texas.mp3'],
+                   ['•Plant Hall is designated as a national historic landmark.', True, None, 'w_landmark.mp3'],
+                   ['•The University of Tampa has hundreds of student clubs.', True, None, 'w_clubs.mp3'],
+                   ['•The University of Tampa offers rentable e-scooters to students and\n faculty.', False, None, 'w_rentable.mp3'],
+                   ['•You can see downtown Tampa from campus.', True, None, 'w_downtown.mp3'],
+                   ['•The University of Tampa is always running, even during extreme\n weather events such as hurricanes.', False, None, 'w_running.mp3'],
+                   ['•The University of Tampa has a special alert messaging service for\n emergency use.', True, None, 'w_alert.mp3'],
+                   ['•The current mayor of Tampa, Jane Castor, is a University of Tampa\n alumni.', True, None, 'w_castor.mp3'],
+                   ['•Elvis Presley performed in the Sykes Chapel.', False, None, 'w_elvis.mp3'],
+                   ['•The University of Tampa is situated directly on the shore of Tampa\n Bay.', False, None, 'w_bay.mp3']], 5)
+  
 ###############################
 # generate the bomb's specifics
 ###############################
@@ -188,6 +189,7 @@ keypadQuestion, keypadAnswers, keypadHint, keypadDiff, keypadImg, keypadVL, keyp
 togglesQuestion, togglesTarget, togglesHint, togglesDiff, togglesImg, togglesVL, togglesHintVL = gen_toggles()
 wiresQ1, wiresQ2, wiresQ3, wiresQ4, wiresQ5 = gen_wires()
 wiresTarget = ''.join([str(int(wiresQ1[1])), str(int(wiresQ2[1])), str(int(wiresQ3[1])), str(int(wiresQ4[1])), str(int(wiresQ5[1]))])
+wiresQuestions, wiresVLs = '\n'.join([wiresQ1[0], wiresQ2[0], wiresQ3[0], wiresQ4[0], wiresQ5[0]]), [wiresQ1[3], wiresQ2[3], wiresQ3[3], wiresQ4[3], wiresQ5[3]]
 
 if (DEBUG):
     print(f"Keypad Question: {keypadQuestion}")

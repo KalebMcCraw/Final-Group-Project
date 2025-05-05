@@ -20,7 +20,11 @@ def bootup(n=0):
 #         if (not ANIMATE):
 #             gui._lscroll["text"] = boot_text.replace("\x00", "")
         # configure the remaining GUI widgets
-        gui.setup()
+        gui.diff_screen()
+        
+        soundsThread = Sounds()
+        soundsThread.start()
+        
         # setup the phase threads, execute them, and check their statuses
         if (RPi):
             setup_phases()
@@ -37,6 +41,14 @@ def bootup(n=0):
 # sets up the phase threads
 def setup_phases():
     global timer, keypad, wires, button, toggles
+    
+    #(removed)
+    #if DIFFICULTY[0] == "casual":
+    #    COUNTDOWN = 180
+    #elif DIFFICULTY[0] == "seasoned":
+    #    COUNTDOWN = 120
+    #elif DIFFICULTY[0] == "expert":
+    #    COUNTDOWN = 90
     
     # setup the timer thread
     timer = Timer(component_7seg, COUNTDOWN)
@@ -72,7 +84,20 @@ def check_phases():
         displayTxt2 += f"{button}\n"
         # check the button status to apply to the timer
         if (button._activated):
-            timer.process(button._runColor)
+            # timer.process(button._runColor)
+            #This is what happens when the button is pressed
+            if button._runColor == 0: #Red
+                timer._value -= 15
+                
+            elif button._runColor == 1: #Green
+                timer._value += 10
+                
+            else: #Blue
+                if randint(0,1):
+                    gui.show_hint("Keypad", keypadHint, keypadHintVL)
+                else:
+                    gui.show_hint("Toggles", togglesHint, togglesHintVL)
+                    
             button._activated = False
     else:
         displayTxt1 += f"...\n"
@@ -182,16 +207,19 @@ def turn_off():
 # MAIN
 ######
 
+pygame.init()
+pygame.mixer.init()
+
 # initialize the LCD GUI
 window = Tk()
 gui = Lcd(window)
 
 # initialize the bomb strikes and active phases (i.e., not yet defused)
-strikes_left = NUM_STRIKES
+# strikes_left = NUM_STRIKES
 active_phases = NUM_PHASES
 
-# "boot" the bomb
-gui.after(1000, bootup)
+# boot the bomb
+bootup()
 
 # display the LCD GUI
 window.mainloop()
