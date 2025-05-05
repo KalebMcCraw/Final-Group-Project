@@ -26,6 +26,7 @@ def bootup(n=0):
 def wait_for_selection():
     # if user selected...
     if gui._selected:
+
         # setup the phase threads, execute them, and check their statuses
         if (RPi):
             setup_phases()
@@ -36,6 +37,14 @@ def wait_for_selection():
 # sets up the phase threads
 def setup_phases():
     global timer, keypad, wires, button, toggles
+    
+    #(removed)
+    #if DIFFICULTY[0] == "casual":
+    #    COUNTDOWN = 180
+    #elif DIFFICULTY[0] == "seasoned":
+    #    COUNTDOWN = 120
+    #elif DIFFICULTY[0] == "expert":
+    #    COUNTDOWN = 90
     
     # setup the timer thread
     timer = Timer(component_7seg, COUNTDOWN)
@@ -131,6 +140,7 @@ def check_phases():
             toggles._failed = False
     else:
         displayTxt1 += "Toggles Input:\nDEFUSED\n"
+    
     # check the wires
     if (wires._running):
         # update the GUI
@@ -186,6 +196,9 @@ def turn_off():
 ######
 # MAIN
 ######
+
+pygame.init()
+pygame.mixer.init()
 
 # initialize the LCD GUI
 window = Tk()
