@@ -30,6 +30,9 @@ class Lcd(Frame):
         self._timer = None
         # we need to know about the pushbutton to turn off its LED when the program exits
         self._button = None
+        # initialize diff selection var
+        self._selected = False
+        # start pygame mixer for sounds
         pygame.mixer.init()
         
     # create a difficulty selection screen
@@ -45,17 +48,17 @@ class Lcd(Frame):
         self._boxTitle.place(x=50, y=40)
         # easy button
         self._canvas1 = Canvas(self._dsBase, width=200, height=300)
-        self._btnE = tkinter.Button(self._canvas1, width=100, height=100, bg='#F0F0FF', fg='#30C040', text='How do you\n open the game?', font=('Consolas', 14), command=lambda: self.set_difficulty('e'))
+        self._btnE = tkinter.Button(self._canvas1, width=100, height=100, bg='#F0F0FF', fg='#30C040', text='Easy', font=('Consolas', 22), command=lambda: self.set_difficulty('e'))
         self._btnEWin = self._canvas1.create_window(100, 150, anchor=CENTER, window=self._btnE)
         self._canvas1.place(x=50, y=140)
         # medium button
         self._canvas2 = Canvas(self._dsBase, width=200, height=300)
-        self._btnN = tkinter.Button(self._canvas2, width=100, height=100, bg='#F0F0FF', fg='#E0C040', text='Normal', font=('Consolas', 28), command=lambda: self.set_difficulty('n'))
+        self._btnN = tkinter.Button(self._canvas2, width=100, height=20, bg='#F0F0FF', fg='#E0C040', text='Normal', font=('Consolas', 22), command=lambda: self.set_difficulty('n'))
         self._btnNWin = self._canvas2.create_window(100, 150, anchor=CENTER, window=self._btnN)
         self._canvas2.place(x=300, y=140)
         # hard button
         self._canvas3 = Canvas(self._dsBase, width=200, height=300)
-        self._btnH = tkinter.Button(self._canvas3, width=100, height=100, bg='#F0F0FF', fg='#C03040', text='Hardcore\nNerd', font=('Consolas', 28), command=lambda: self.set_difficulty('h'))
+        self._btnH = tkinter.Button(self._canvas3, width=100, height=20, bg='#F0F0FF', fg='#C03040', text='Hard', font=('Consolas', 22), command=lambda: self.set_difficulty('h'))
         self._btnHWin = self._canvas3.create_window(100, 150, anchor=CENTER, window=self._btnH)
         self._canvas3.place(x=550, y=140)
         # put it all in
@@ -70,6 +73,8 @@ class Lcd(Frame):
         # destroy diff screen
         self._dsBase.pack_forget()
         self._dsBase.destroy()
+        # mark diff as selected
+        self._selected = True
         # startup the actual bomb
         self.setup()
         
@@ -143,10 +148,14 @@ class Lcd(Frame):
     
     # close the question screen
     def close_question(self):
-        self._qBase.pack_forget()
-        self._qBase.destroy()
+        try:
+            self._qBase.pack_forget()
+            self._qBase.destroy()
+        except:
+            pass
         pygame.mixer.music.set_volume(0)
-        for i in range (5):
+        # make absolutely sure the sounds stop
+        for i in range (20):
             if pygame.mixer.music.get_busy():
                 pygame.mixer.music.unload()
                 sleep(0.1)
@@ -160,19 +169,19 @@ class Lcd(Frame):
     # play a hint
     def show_hint(self, component, hint, voice):
         #avoids sound overlapping
-        pygame.mixer.music.unload()
+        self.close_question()
         
         # showhint = hints
         self._hBase = Canvas(self._base, bg='#F0F0FF', width=400, height=240)
-        self._hBase.create_text(5, 5, text=f'{component} Hint', font=('Consolas', 12, 'bold'), anchor=NW)
-        self._hBase.create_text(5, 22, text=f'{hint}', font=('Consolas', 12), anchor=NW)
+        self._hBase.create_text(5, 5, text=f'{component} Hint', font=('Consolas', 16, 'bold'), anchor=NW)
+        self._hBase.create_text(5, 30, text=f'{hint}', font=('Consolas', 12), anchor=NW)
         
         # exit image
-        self._exitImage = Image.open('graphics/images/exit.png')
-        self._exitImg = ImageTk.PhotoImage(self._exitImage)
+        self._closeImage = Image.open('graphics/images/exit.png').resize((16,16))
+        self._closeImg = ImageTk.PhotoImage(self._closeImage)
         
         # adds exit button
-        self._hClose = tkinter.Button(self._hBase, width=16, height=16, image=self._exitImg, command=lambda: self.close_hint())
+        self._hClose = tkinter.Button(self._hBase, width=16, height=16, image=self._closeImg, command=lambda: self.close_hint())
         self._hBase.create_window(395, 5, anchor=NE, window=self._hClose)
         
         # place it
@@ -195,24 +204,8 @@ class Lcd(Frame):
     def setButton(self, button):
         self._button = button
 
-#     # pauses the timer
-#     def pause(self):
-#         if (RPi):
-#             self._timer.pause()
-
     # setup the conclusion GUI (explosion/defusion)
     def conclusion(self, success=False):
-        # destroy/clear widgets that are no longer needed
-#         self._lscroll["text"] = ""
-#         self._ltimer.destroy()
-#         self._lkeypad.destroy()
-#         self._lwires.destroy()
-#         self._lbutton.destroy()
-#         self._ltoggles.destroy()
-#         self._lstrikes.destroy()
-#         if (SHOW_BUTTONS):
-#             self._bpause.destroy()
-#             self._bquit.destroy()
         # get rid of existing screen
         self._base.pack_forget()
         self._base.destroy()
@@ -223,14 +216,20 @@ class Lcd(Frame):
         self._esBase.pack()
         # title
         self._boxTitle = Canvas(self._esBase, bg='#E0F0FF', width=700, height=75)
+        # if you win, say its defused and hooray sound
         if success:
-            self._boxTitle.create_text(350, 38, text='You won! 😀😀😀', font=('Consolas', 36, 'bold', 'italic'), fill='#30C040')
+            self._boxTitle.create_text(350, 38, text='The bomb was defused!', font=('Consolas', 28, 'bold', 'italic'), fill='#30C040')
+            pygame.mixer.music.load('graphics/sounds/bomb_defused.wav')
+            pygame.mixer.music.play()
+        # if you lose, say it exploded and boom sound
         else:
-            self._boxTitle.create_text(350, 38, text='You lost! 😂😂😂', font=('Consolas', 36, 'bold', 'italic'), fill='#C03040')
+            self._boxTitle.create_text(350, 38, text='The bomb exploded!', font=('Consolas', 28, 'bold', 'italic'), fill='#C03040')
+            pygame.mixer.music.load('graphics/sounds/bomb_detonated.mp3')
+            pygame.mixer.music.play()
         self._boxTitle.place(x=50, y=40)
         # retry btn
         self._canvas1 = Canvas(self._esBase, width=600, height=300)
-        self._btnR = tkinter.Button(self._canvas1, width=100, height=100, bg='#F0F0FF', text='Retry', font=('Consolas', 64, 'bold', 'italic'), command=self.retry)
+        self._btnR = tkinter.Button(self._canvas1, width=100, height=20, bg='#F0F0FF', text='Retry...', font=('Consolas', 48, 'bold', 'italic'), command=self.retry)
         self._btnRWin = self._canvas1.create_window(300, 150, anchor=CENTER, window=self._btnR)
         self._canvas1.place(x=100, y=140)
         # exit btn
@@ -238,13 +237,6 @@ class Lcd(Frame):
         self._exit.place(x=750, y=430)
         # put the end screen together
         self.pack(fill=BOTH, expand=True)
-#         # reconfigure the GUI
-#         # the retry button
-#         self._bretry = tkinter.Button(self, bg="red", fg="white", font=("Courier New", 18), text="Retry", anchor=CENTER, command=self.retry)
-#         self._bretry.grid(row=1, column=0, pady=40)
-#         # the quit button
-#         self._bquit = tkinter.Button(self, bg="red", fg="white", font=("Courier New", 18), text="Quit", anchor=CENTER, command=self.quit)
-#         self._bquit.grid(row=1, column=2, pady=40)
 
     # re-attempts the bomb (after an explosion or a successful defusion)
     def retry(self):
@@ -283,21 +275,27 @@ class PhaseThread(Thread):
         self._running = False
 
 class Sounds(PhaseThread):
+    # create thread
     def __init__(self):
         super().__init__("sound")
         
     # runs the thread
     def run(self):
+        # init global playsound activator
         global playsound
         playsound = None
+        #loop
         self._running = True
         while (self._running):
+            # if playsound called
             if (playsound != None):
                 sounds = playsound
                 playsound = None
+                # play the sounds
                 for sound in sounds:
                     pygame.mixer.music.load(f"graphics/sounds/{sound}")
                     pygame.mixer.music.play()
+                    # wait for sound to finish before playing next one
                     while pygame.mixer.music.get_busy():
                         sleep(0.1)
             sleep(0.1)
@@ -327,7 +325,7 @@ class Timer(PhaseThread):
                 # wait 1s (default) and continue
                 sleep(self._interval)
                 # the timer has expired -> phase failed (explode)
-                if (self._value == 0):
+                if (self._value <= 0):
                     self._running = False
                 self._value -= 1
             else:
@@ -404,6 +402,7 @@ class Wires(PhaseThread):
                 # if the wires are all done, defuse
                 elif self._value == self._target:
                     self._defused = True
+            sleep(0.1)
 
     # returns the jumper wires state as a string
     def __str__(self):
@@ -439,6 +438,7 @@ class Button(PhaseThread):
             if i == 0:
                 # if its on
                 if self._color != None:
+                    # if it was pressed, set the color to run and activated to true
                     if self._pressed:
                         self._runColor = self._color
                         self._activated = True
@@ -485,6 +485,7 @@ class Toggles(PhaseThread):
                 # if the toggles are correct, defuse
                 elif self._value == self._target:
                     self._defused = True
+            sleep(0.1)
 
     # returns the toggle switches state as a string
     def __str__(self):

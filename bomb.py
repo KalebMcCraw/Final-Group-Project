@@ -14,29 +14,25 @@ from bomb_phases import *
 ###########
 # generates the bootup sequence on the LCD
 def bootup(n=0):
-    # if we're not animating (or we're at the end of the bootup text)
-    if (not ANIMATE or n == len(boot_text)):
-        # if we're not animating, render the entire text at once (and don't process \x00)
-#         if (not ANIMATE):
-#             gui._lscroll["text"] = boot_text.replace("\x00", "")
-        # configure the remaining GUI widgets
-        gui.diff_screen()
-        
-        soundsThread = Sounds()
-        soundsThread.start()
-        
+    # set up the difficuty select screen
+    gui.diff_screen()
+    # create a sounds thread
+    soundsThread = Sounds()
+    soundsThread.start()
+    # loop this until user selects to start components
+    gui.after(100, wait_for_selection)
+
+# loop until difficulty selection is made
+def wait_for_selection():
+    # if user selected...
+    if gui._selected:
+
         # setup the phase threads, execute them, and check their statuses
         if (RPi):
             setup_phases()
             check_phases()
-#     # if we're animating
-#     else:
-#         # add the next character (but don't render \x00 since it specifies a longer pause)
-#         if (boot_text[n] != "\x00"):
-#             gui._lscroll["text"] += boot_text[n]
-# 
-#         # scroll the next character after a slight delay (\x00 is a longer delay)
-#         gui.after(25 if boot_text[n] != "\x00" else 750, bootup, n + 1)
+    else:
+        gui.after(100, wait_for_selection)
 
 # sets up the phase threads
 def setup_phases():
@@ -93,18 +89,19 @@ def check_phases():
                 timer._value += 10
                 
             else: #Blue
+                # choose whether to give a keypad or toggles hint
                 if randint(0,1):
-                    gui.show_hint("Keypad", keypadHint, keypadHintVL)
+                    gui.show_hint("Keypad", keypadHint, [keypadHintVL])
                 else:
-                    gui.show_hint("Toggles", togglesHint, togglesHintVL)
+                    gui.show_hint("Toggles", togglesHint, [togglesHintVL])
                     
             button._activated = False
     else:
-        displayTxt1 += f"...\n"
+        displayTxt2 += f"...\n"
     # check the timer
     if (timer._running):
         # update the GUI
-        displayTxt1 += f"Time Remaining:\n{timer}"
+        displayTxt2 += f"Time Remaining:\n{timer}"
     else:
         # the countdown has expired -> explode!
         # turn off the bomb and render the conclusion GUI
@@ -127,7 +124,7 @@ def check_phases():
             keypad._failed = False
             keypad._value = ""
     else:
-        displayTxt1 += "...\n"
+        displayTxt1 += "DEFUSED\n"
     # check the toggles
     if (toggles._running):
         # update the GUI
@@ -142,7 +139,8 @@ def check_phases():
             # reset the toggles
             toggles._failed = False
     else:
-        displayTxt1 += "Toggles Input:\n...\n"
+        displayTxt1 += "Toggles Input:\nDEFUSED\n"
+    
     # check the wires
     if (wires._running):
         # update the GUI
@@ -157,18 +155,11 @@ def check_phases():
             # reset the wires
             wires._failed = False
     else:
-        displayTxt1 += "Wires Input:\n..."
+        displayTxt1 += "Wires Input:\nDEFUSED"
     
     # fully udpate GUI text
     gui._boxDisplay.itemconfigure(gui._displayText1, text=displayTxt1)
     gui._boxExtra.itemconfigure(gui._displayText2, text=displayTxt2)
-    # too many strikes -> explode!
-    if (strikes_left == 0):
-        # turn off the bomb and render the conclusion GUI
-        turn_off()
-        gui.after(1000, gui.conclusion, False)
-        # stop checking phases
-        return
 
     # the bomb has been successfully defused!
     if (active_phases == 0):
@@ -185,7 +176,6 @@ def check_phases():
 def strike():
     # gui._diff is the difficulty
     timer._value -= 30 if gui._diff == 'e' else 60 if gui._diff == 'n' else 120
-
 
 # turns off the bomb
 def turn_off():
@@ -219,7 +209,7 @@ gui = Lcd(window)
 active_phases = NUM_PHASES
 
 # boot the bomb
-bootup()
+gui.after(0, bootup)
 
 # display the LCD GUI
 window.mainloop()
