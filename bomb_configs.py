@@ -114,7 +114,7 @@ def gen_toggles():
                  ('When did the Cass Building open?', '1000', 'The same year a unique president was\nelected.', 'cass.jpg', 'tog_8.mp3', 'hint-8.mp3'),
                  ('What time does the Benson and Alex Fitness Center open on\nSaturday?', '1001', 'What number of lives people claim cats\nhave.', 'fitness.jpg', 'tog_9.mp3', 'hint-9.mp3'),
                  ('How many stories tall is the Grand Center?', '1010', 'A big fat hen!', 'gc.jpg', 'tog_10.mp3', 'hint-10.mp3'),
-                 ('University of Tampa president Teresa Abi-Nader Dahlberg is the\n___th\n president of the university.', '1011', 'Each president has, on average, served\nfor around 8-9 years.', 'dahlberg.jpg', 'tog_11.mp3', 'hint-11.mp3'),
+                 ('University of Tampa president Teresa Abi-Nader Dahlberg is the\n___th president of the university.', '1011', 'Each president has, on average, served\nfor around 8-9 years.', 'dahlberg.jpg', 'tog_11.mp3', 'hint-11.mp3'),
                  ('How many residence halls are at the University of Tampa?', '1100', 'A dime...', 'residence.jpg', 'tog_12.mp3', 'hint-12.mp3'),
                  ('How many sororities are there in the University of Tampa?', '1101', 'A spooky Friday.', 'sorority.jpg', 'tog_13.mp3', 'hint-13.mp3'),
                  ('What rank does U.S. News & World Report give the University of\nTampa in the Regional Universities South category? (2025)', '1110', 'The same as the youngest age one can\ndrive in the U.S.', 'tampa.jpg', 'tog_14.mp3', 'hint-14.mp3'),
