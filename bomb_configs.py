@@ -153,6 +153,7 @@ def gen_wires():
                    ['•The current mayor of Tampa, Jane Castor, is a University of Tampa\n alumni.', True, None, 'w_castor.mp3'],
                    ['•Elvis Presley performed in the Sykes Chapel.', False, None, 'w_elvis.mp3'],
                    ['•The University of Tampa is situated directly on the shore of Tampa\n Bay.', False, None, 'w_bay.mp3']], 5)
+  
 ###############################
 # generate the bomb's specifics
 ###############################

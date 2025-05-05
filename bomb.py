@@ -29,6 +29,14 @@ def bootup(n=0):
         if (RPi):
             setup_phases()
             check_phases()
+#     # if we're animating
+#     else:
+#         # add the next character (but don't render \x00 since it specifies a longer pause)
+#         if (boot_text[n] != "\x00"):
+#             gui._lscroll["text"] += boot_text[n]
+# 
+#         # scroll the next character after a slight delay (\x00 is a longer delay)
+#         gui.after(25 if boot_text[n] != "\x00" else 750, bootup, n + 1)
 
 # sets up the phase threads
 def setup_phases():
