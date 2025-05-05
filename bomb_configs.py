@@ -11,8 +11,7 @@ COUNTDOWN = 300      # the initial bomb countdown value (seconds)
 NUM_PHASES = 3       # the total number of initial active bomb phases
 
 # imports
-from random import randint, shuffle, choice, sample
-from string import ascii_uppercase
+from random import choice, sample
 if (RPi):
     import board
     from adafruit_ht16k33.segments import Seg7x4

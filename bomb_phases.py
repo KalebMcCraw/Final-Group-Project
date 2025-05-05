@@ -34,7 +34,52 @@ class Lcd(Frame):
         self._selected = False
         # start pygame mixer for sounds
         pygame.mixer.init()
-        
+    
+    #getters/setters
+    @property
+    def diff(self):
+        return self._diff
+    @diff.setter
+    def diff(self, x):
+        self._diff = x
+    
+    @property
+    def selected(self):
+        return self._selected
+    @selected.setter
+    def selected(self, x):
+        self._selected = x
+    
+    # gui updating things
+    @property
+    def boxDisplay(self):
+        return self._boxDisplay
+    @boxDisplay.setter
+    def boxDisplay(self, x):
+        self._boxDisplay = x
+    
+    @property
+    def boxExtra(self):
+        return self._boxExtra
+    @boxExtra.setter
+    def boxExtra(self, x):
+        self._boxExtra = x
+    
+    @property
+    def displayText1(self):
+        return self._displayText1
+    @displayText1.setter
+    def displayText1(self, x):
+        self._displayText1 = x
+    
+    @property
+    def displayText2(self):
+        return self._displayText2
+    @displayText2.setter
+    def displayText2(self, x):
+        self._displayText2 = x
+    
+    #methods
     # create a difficulty selection screen
     def diff_screen(self):
         # bg image
@@ -78,7 +123,6 @@ class Lcd(Frame):
         # startup the actual bomb
         self.setup()
         
-
     # sets up the LCD GUI
     def setup(self):
         # bg image
@@ -141,7 +185,7 @@ class Lcd(Frame):
         self._qDictate = tkinter.Button(self._qBase, width=32, height=32, image=self._qDictateImg, command=lambda: self.playsound(sList))
         self._qBase.create_window(652, 5, anchor=NE, window=self._qDictate)
         # add close button
-        self._qClose = tkinter.Button(self._qBase, width=32, height=32, image=self._exitImg, command=lambda: self.close_question())
+        self._qClose = tkinter.Button(self._qBase, width=32, height=32, image=self._exitImg, command=self.close_question())
         self._qBase.create_window(700, 5, anchor=NE, window=self._qClose)
         # place it
         self._qBase.place(x=50, y=40)
@@ -181,7 +225,7 @@ class Lcd(Frame):
         self._closeImg = ImageTk.PhotoImage(self._closeImage)
         
         # adds exit button
-        self._hClose = tkinter.Button(self._hBase, width=16, height=16, image=self._closeImg, command=lambda: self.close_hint())
+        self._hClose = tkinter.Button(self._hBase, width=16, height=16, image=self._closeImg, command=self.close_hint())
         self._hBase.create_window(395, 5, anchor=NE, window=self._hClose)
         
         # place it
@@ -248,11 +292,11 @@ class Lcd(Frame):
     def quit(self):
         if (RPi):
             # turn off the 7-segment display
-            self._timer._running = False
-            self._timer._component.blink_rate = 0
-            self._timer._component.fill(0)
+            self._timer.running = False
+            self._timer.component.blink_rate = 0
+            self._timer.component.fill(0)
             # turn off the pushbutton's LED
-            for pin in self._button._rgb:
+            for pin in self._button.rgb:
                 pin.value = True
         # exit the application
         exit(0)
@@ -313,23 +357,44 @@ class Timer(PhaseThread):
         self._sec = ""
         # by default, each tick is 1 second
         self._interval = 1
-
+    
+    #getters/setters
+    @property
+    def running(self):
+        return self._running
+    @running.setter
+    def running(self, x):
+        self._running = x
+    
+    @property
+    def value(self):
+        return self._value
+    @value.setter
+    def value(self, x):
+        self._value = x
+    
+    @property
+    def component(self):
+        return self._component
+    @component.setter
+    def component(self, x):
+        self._component = x
+    
+    #methods
     # runs the thread
     def run(self):
         self._running = True
         while (self._running):
-            if (not self._paused):
-                # update the timer and display its value on the 7-segment display
-                self._update()
-                self._component.print(str(self))
-                # wait 1s (default) and continue
-                sleep(self._interval)
-                # the timer has expired -> phase failed (explode)
-                if (self._value <= 0):
-                    self._running = False
-                self._value -= 1
-            else:
-                sleep(0.1)
+            # update the timer and display its value on the 7-segment display
+            self._update()
+            self._component.print(str(self))
+            # wait 1s (default) and continue
+            sleep(self._interval)
+            # the timer has expired -> phase failed (explode)
+            if (self._value <= 0):
+                self._running = False
+            self._value -= 1
+            sleep(0.1)
 
     # updates the timer (only internally called)
     def _update(self):
@@ -347,7 +412,37 @@ class Keypad(PhaseThread):
         super().__init__(name, component, target)
         # the default value is an empty string
         self._value = ""
-
+    
+    #getters/setters
+    @property
+    def running(self):
+        return self._running
+    @running.setter
+    def running(self, x):
+        self._running = x
+    
+    @property
+    def value(self):
+        return self._value
+    @value.setter
+    def value(self, x):
+        self._value = x
+    
+    @property
+    def defused(self):
+        return self._defused
+    @defused.setter
+    def defused(self, x):
+        self._defused = x
+    
+    @property
+    def failed(self):
+        return self._failed
+    @failed.setter
+    def failed(self, x):
+        self._failed = x
+    
+    #methods
     # runs the thread
     def run(self):
         self._running = True
@@ -386,7 +481,30 @@ class Keypad(PhaseThread):
 class Wires(PhaseThread):
     def __init__(self, component, target, name="Wires"):
         super().__init__(name, component, target)
-
+    
+    #getters/setters
+    @property
+    def running(self):
+        return self._running
+    @running.setter
+    def running(self, x):
+        self._running = x
+    
+    @property
+    def defused(self):
+        return self._defused
+    @defused.setter
+    def defused(self, x):
+        self._defused = x
+    
+    @property
+    def failed(self):
+        return self._failed
+    @failed.setter
+    def failed(self, x):
+        self._failed = x
+    
+    #methods
     # runs the thread
     def run(self):
         self._running = True
@@ -424,6 +542,37 @@ class Button(PhaseThread):
         self._activated = False
         self._interval = 20 if difficulty == 'e' else 10 if difficulty == 'n' else 5
         self._chance = 8 if difficulty == 'e' else 15 if difficulty == 'n' else 30
+    
+    #getters/setters
+    @property
+    def running(self):
+        return self._running
+    @running.setter
+    def running(self, x):
+        self._running = x
+    
+    @property
+    def activated(self):
+        return self._activated
+    @activated.setter
+    def activated(self, x):
+        self._activated = x
+    
+    @property
+    def rgb(self):
+        return self._rgb
+    @rgb.setter
+    def rgb(self, x):
+        self._rgb = x
+    
+    @property
+    def runColor(self):
+        return self._runColor
+    @runColor.setter
+    def runColor(self, x):
+        self._runColor = x
+    
+    #methods
     # runs the thread
     def run(self):
         self._running = True
@@ -469,7 +618,30 @@ class Button(PhaseThread):
 class Toggles(PhaseThread):
     def __init__(self, component, target, name="Toggles"):
         super().__init__(name, component, target)
-
+    
+    #getters/setters
+    @property
+    def running(self):
+        return self._running
+    @running.setter
+    def running(self, x):
+        self._running = x
+    
+    @property
+    def defused(self):
+        return self._defused
+    @defused.setter
+    def defused(self, x):
+        self._defused = x
+    
+    @property
+    def failed(self):
+        return self._failed
+    @failed.setter
+    def failed(self, x):
+        self._failed = x
+    
+    #methods
     # runs the thread
     def run(self):
         self._running = True
