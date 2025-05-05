@@ -208,7 +208,8 @@ class Lcd(Frame):
     # play a given sound
     def playsound(self, sounds):
         global playsound
-        playsound = sounds
+        if pygame.mixer.music.get_busy():
+            playsound = sounds
             
     # play a hint
     def show_hint(self, component, hint, voice):
