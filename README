@@ -1,1 +1,31 @@
-# Test
+<h1 align="left">University of Tampa Trivia Bomb</h1>
+
+###
+
+<p align="left">This project is a spinoff of the game Keep Talking and Nobody Explodes, a cooperative bomb-defusing party game. While this game is software-based, our project is physical, having many components including a button, keypad, screen, timer toggles, and wires.<br>Our project incorporates trivia about the university into the bomb as well, turning the focus from solving component functionality to answering questions about the university.</p>
+
+###
+
+<h2 align="left">Creators</h2>
+
+###
+
+<p align="left">Lama A.<br>Janpolad G.<br>Kaleb M.<br>Teya S.</p>
+
+###
+
+<h2 align="left">Info</h2>
+
+###
+
+<p align="left">General Defusal:<br>To defuse our bomb, you must deactivate all 3 trivia-based phases before the timer runs out. If you do not deactivate these phases, the bomb detonates. If you do, it gets defused.<br><br>The Phases:<br>There are 3 phases to the bomb: the keypad, the toggles, and the wires. Each phase has a different type of question which you must answer correctly to disable the phase.<br>There is also a button which does not need to be defused but can alter gameplay in various ways.<br><br>Mistakes: <br>Mistakes take several seconds away from your timer, depending on which difficulty was chosen. Making too many mistakes will deplete the timer, thus detonating the bomb.<br><br>The Questions:<br>Each time the bomb is booted, a random assortment of UT trivia is chosen for you to answer. These answers range in their subjects but all pertain to the university. We would ask you to avoid Googling answers to these questions, but nobody’s stopping you.</p>
+
+###
+
+<h2 align="left">Manual</h2>
+
+###
+
+<p align="left">There is a manual which goes further in-depth about each part of the bomb.</p>
+
+###
