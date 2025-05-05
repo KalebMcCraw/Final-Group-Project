@@ -185,7 +185,7 @@ class Lcd(Frame):
         self._qDictate = tkinter.Button(self._qBase, width=32, height=32, image=self._qDictateImg, command=lambda: self.playsound(sList))
         self._qBase.create_window(652, 5, anchor=NE, window=self._qDictate)
         # add close button
-        self._qClose = tkinter.Button(self._qBase, width=32, height=32, image=self._exitImg, command=self.close_question())
+        self._qClose = tkinter.Button(self._qBase, width=32, height=32, image=self._exitImg, command=self.close_question)
         self._qBase.create_window(700, 5, anchor=NE, window=self._qClose)
         # place it
         self._qBase.place(x=50, y=40)
@@ -225,7 +225,7 @@ class Lcd(Frame):
         self._closeImg = ImageTk.PhotoImage(self._closeImage)
         
         # adds exit button
-        self._hClose = tkinter.Button(self._hBase, width=16, height=16, image=self._closeImg, command=self.close_hint())
+        self._hClose = tkinter.Button(self._hBase, width=16, height=16, image=self._closeImg, command=self.close_hint)
         self._hBase.create_window(395, 5, anchor=NE, window=self._hClose)
         
         # place it
