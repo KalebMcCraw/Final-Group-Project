@@ -1,65 +1,31 @@
-### Lama a. – Janpolad G. - Kaleb m. – Teya s.⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-# University of Tampa Trivia Bomb Manual
-### Version A
- 
-## The Main Idea
-This project is a spinoff of the game Keep Talking and Nobody Explodes, a cooperative bomb-defusing party game. While this game is software-based, our project is physical, having many components including a button, keypad, screen, timer toggles, and wires.
-Our project incorporates trivia about the university into the bomb as well, turning the focus from solving component functionality to answering questions about the university.
+<h1 align="left">University of Tampa Trivia Bomb</h1>
 
-## Behind the Scenes
-This project itself runs on a Raspberry Pi computer with the software being written in Python, letting us easily operate the bomb kit components.
-The Python coding is a culmination of the skills we have developed in CSC 102 – The Science of Computing II at the University of Tampa (UT).
- 
-## Defusal
-### General info
-To defuse our bomb, you must deactivate all 3 trivia-based phases before the timer runs out. If you do not deactivate these phases, the bomb detonates. If you do, it gets defused.
-### The Phases
-There are 3 phases to the bomb: the keypad, the toggles, and the wires. Each phase has a different type of question which you must answer correctly to disable the phase.
-There is also a button which does not need to be defused but can alter gameplay in various ways.
-### Mistakes 
-Mistakes take several seconds away from your timer, depending on which difficulty was chosen. Making too many mistakes will deplete the timer, thus detonating the bomb.
-### The Questions
-Each time the bomb is booted, a random assortment of UT trivia is chosen for you to answer. These answers range in their subjects but all pertain to the university. We would ask you to avoid Googling answers to these questions, but nobody’s stopping you. 
+###
 
-## GUI Navigation
-### Difficulty Selection
-There are three difficulties to choose from when the bomb starts.
-•	Easy mode will take 30 seconds from your timer per mistake and will have the button flash its colors for 2 seconds at a time (refer to page 6).
-•	Normal mode will take 1 minute per mistake and have the button flash its colors for 1 second.
-•	Hard mode will take 2 minutes per mistake and have the button flash its colors for 0.5 seconds.
-### Main Screen
-There are several components to the main screen. First, there are three buttons to see each component’s question(s). Second, there are displays for each component’s input state. Third, there is a button in the bottom right to quit the bomb.
-### Question Menu
-Each question menu displays the question(s) for the component, as well as a picture (if applicable), a dictate button, and a close button.
- 
-## The Button
-The button is a phase that doesn’t need to be defused and is located at the top of the bomb kit.
-Occasionally (around once every 15 seconds on average), the button will flash a certain color. Depending on what color it is, you may receive a certain consequence if you press it during the flash; these consequences are:
-•	If pressed while red: you lose 15 seconds.
-•	If pressed while green: you gain 10 seconds.
-•	If pressed while blue: you get a random hint*.
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-<sup>*The random hint will appear on a small GUI and be dictated, with a close button to hide the pop-up. </sup>
+<p align="left">This project is a spinoff of the game Keep Talking and Nobody Explodes, a cooperative bomb-defusing party game. While this game is software-based, our project is physical, having many components including a button, keypad, screen, timer toggles, and wires.<br>Our project incorporates trivia about the university into the bomb as well, turning the focus from solving component functionality to answering questions about the university.</p>
 
-## The Timer
-The timer is the simplest part of the bomb. You will always start with 5 minutes after selecting a difficulty. As discussed, you can gain or lose time based on several factors.
-For one, making a mistake will cost you 30, 60, or 120 seconds based on whether you choose easy, normal, or hard difficulty respectively.
-In addition, the button can also manipulate your time as discussed previously.
-  
-## The Keypad
-The keypad requires you to type a written answer for an open-ended question to defuse.
-The method of inputting a written answer involves the letters on each key; to type a letter, press the number it appears on once. For example, if you wanted to type “HELLO,” you would input “43556.”
-There are multiple valid answers for each question. You will know the answer you are typing is correct because it will not result in a strike.
-However, if the answer you type ends up being incorrect, your input will be reset, and you will be struck.
-  
-## The Toggles
-The toggles require you to input a 4-digit binary answer for a question which has a numerical answer between 1 and 15.
-To convert your decimal (regular) answer into binary, find the powers of two that add up to the answer, labeling each with a 1 in the 3rd row of the table in the physical manual.			
-These values correspond to each toggle in the bomb kit. Any toggle you would’ve marked with a 1 should be flipped.
-If you make a mistake, flick the toggle you mistakenly flipped back before changing any other toggles.
-  
-## The Wires
-The wires require you to disconnect any wire that corresponds to an incorrect statement from a list of 5 statements.
-There are five wires, which correspond to each question given in the trivia. The topmost question connects to the leftmost wire, while the bottommost question connects to the rightmost wire.
-If a statement is true, keep the corresponding wire connected. If a statement is false, disconnect the corresponding wire. You will know if you disconnected the correct wire if you do not receive a strike.
-However, if you disconnect the wrong wire, reconnect it before disconnecting any other wires.
+###
+
+<h2 align="left">Creators</h2>
+
+###
+
+<p align="left">Lama A.<br>Janpolad G.<br>Kaleb M.<br>Teya S.</p>
+
+###
+
+<h2 align="left">Info</h2>
+
+###
+
+<p align="left">General Defusal:<br>To defuse our bomb, you must deactivate all 3 trivia-based phases before the timer runs out. If you do not deactivate these phases, the bomb detonates. If you do, it gets defused.<br><br>The Phases:<br>There are 3 phases to the bomb: the keypad, the toggles, and the wires. Each phase has a different type of question which you must answer correctly to disable the phase.<br>There is also a button which does not need to be defused but can alter gameplay in various ways.<br><br>Mistakes: <br>Mistakes take several seconds away from your timer, depending on which difficulty was chosen. Making too many mistakes will deplete the timer, thus detonating the bomb.<br><br>The Questions:<br>Each time the bomb is booted, a random assortment of UT trivia is chosen for you to answer. These answers range in their subjects but all pertain to the university. We would ask you to avoid Googling answers to these questions, but nobody’s stopping you.</p>
+
+###
+
+<h2 align="left">Manual</h2>
+
+###
+
+<p align="left">There is a manual which goes further in-depth about each part of the bomb.</p>
+
+###
