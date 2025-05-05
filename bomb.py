@@ -38,14 +38,6 @@ def wait_for_selection():
 def setup_phases():
     global timer, keypad, wires, button, toggles
     
-    #(removed)
-    #if DIFFICULTY[0] == "casual":
-    #    COUNTDOWN = 180
-    #elif DIFFICULTY[0] == "seasoned":
-    #    COUNTDOWN = 120
-    #elif DIFFICULTY[0] == "expert":
-    #    COUNTDOWN = 90
-    
     # setup the timer thread
     timer = Timer(component_7seg, COUNTDOWN)
     # bind the 7-segment display to the LCD GUI so that it can be paused/unpaused from the GUI
